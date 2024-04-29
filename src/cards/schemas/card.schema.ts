@@ -1,0 +1,5 @@
+import { Schema } from 'mongoose';
+
+export const CardSchema = new Schema({
+  test: String,
+});
