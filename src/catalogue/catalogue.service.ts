@@ -10,4 +10,12 @@ export class CatalogueService {
  async findAll(): Promise<Catalogue[]> {
     return await this.catalogueModel.find().exec();
  }
+
+ async findByName(name: string): Promise<Catalogue[]> {
+  console.log(`Searching for name: ${name}`);
+  const result = await this.catalogueModel.find({ Name: { $regex: name, $options: 'i' } }).exec();
+  console.log(`Found documents:`, result);
+  return result;
+}
+
 }
