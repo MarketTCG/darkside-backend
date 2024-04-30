@@ -11,9 +11,10 @@ export class CatalogueController {
     return this.catalogueService.findAll();
  }
 
- @Get('search/name/:name')
- async findByName(@Param('name') name: string): Promise<Catalogue[]> {
-    return this.catalogueService.findByName(name);
+
+ @Get(':key/:value')
+ async search(@Param('key') key: string, @Param('value') value: string): Promise<any> {
+    return this.catalogueService.search(key, value);
  }
 
 }

@@ -11,11 +11,24 @@ export class CatalogueService {
     return await this.catalogueModel.find().exec();
  }
 
- async findByName(name: string): Promise<Catalogue[]> {
-  console.log(`Searching for name: ${name}`);
-  const result = await this.catalogueModel.find({ Name: { $regex: name, $options: 'i' } }).exec();
+
+
+async findByAspect(aspect: string): Promise<Catalogue[]> {
+  console.log(`Searching for name: ${aspect}`);
+  const result = await this.catalogueModel.find({ Aspects: { $regex: aspect, $options: 'i' } }).exec();
   console.log(`Found documents:`, result);
   return result;
+}
+
+async search(key: string, value: string): Promise<any> {
+ 
+  const query = {};
+  query[key] = { $regex: value, $options: 'i' }; // Case-insensitive search
+  console.log(`Searching for name: ${key}`);
+  console.log(`Searching for name: ${value}`);
+
+  // Execute the query
+  return this.catalogueModel.find(query).exec();
 }
 
 }
