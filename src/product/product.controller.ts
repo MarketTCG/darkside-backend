@@ -1,8 +1,8 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { Product } from './models/product.model';
 
-@Controller('products')
+@Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
@@ -10,4 +10,10 @@ export class ProductController {
   async findAll(): Promise<Product[]> {
     return this.productService.findAll();
   }
+
+  @Get('_id')
+  async findById(@Query('id') id: string): Promise<Product> {
+    return this.productService.findById(id);
+ }
+
 }
