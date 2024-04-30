@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { CatalogueService } from './catalogue.service';
 import { Catalogue } from './models/catalogue.model'; // Adjust the import path as necessary
 
@@ -12,8 +12,8 @@ export class CatalogueController {
  }
 
 
- @Get(':key/:value')
- async search(@Param('key') key: string, @Param('value') value: string): Promise<any> {
+ @Get('search')
+ async search(@Query('key') key: string, @Query('value') value: string): Promise<any> {
     return this.catalogueService.search(key, value);
  }
 
