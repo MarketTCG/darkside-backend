@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { CardsModule } from './templates/cards.module';
 import { CatalogueModule } from './catalogue/catalogue.module';
 import { ProductModule } from './product/product.module';
+import { ListingModule } from './listing/listing.module';
 
 
 @Module({
@@ -12,7 +13,8 @@ import { ProductModule } from './product/product.module';
     MongooseModule.forRoot(process.env.DATABASE_CON),
     CardsModule,
     CatalogueModule,
-    ProductModule
+    ProductModule,
+    ListingModule
   ],
   controllers: [AppController],
   providers: [AppService],
