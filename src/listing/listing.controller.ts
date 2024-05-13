@@ -1,6 +1,7 @@
-import { Controller, Get, Query, Put, Body, Param } from '@nestjs/common';
+import { Controller, Get, Query, Put, Body, Param, Post } from '@nestjs/common';
 import { ListingService } from './listing.service';
 import { Listing } from './models/listing.model';
+import { CreateListingDto } from './dto/create-listing.dto';
 
 @Controller('listing')
 export class ListingController {
@@ -16,9 +17,24 @@ export class ListingController {
     return this.listingService.findById(id);
  }
 
- @Put(':listingId/append-product')
- async appendProductToListing(@Param('listingId') listingId: string, @Body('productId') productId: string): Promise<any> {
-    return this.listingService.appendProductToListing(listingId, productId);
- }
+ @Put(':id/cards')
+async addCardsToListing(
+  @Param('id') listingId: string,
+  @Body() cards: { CardId: string; Price: number }[],
+) {
+  return this.listingService.addCardsToListing(listingId, cards);
+}
+
+@Post()
+  createListing(
+    @Body() createListingDto: CreateListingDto
+  ) {
+    return this.listingService.createListing(
+      createListingDto.VendorId,
+      createListingDto.Listed,
+      createListingDto.Total,
+      createListingDto.Sold
+    );
+  }
 
 }

@@ -2,13 +2,12 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Listing } from './models/listing.model';
-import { Product } from '../product/models/product.model';
 import { Types } from 'mongoose';
+
 
 @Injectable()
 export class ListingService {
-  constructor(@InjectModel('Listing') private readonly listingModel: Model<Listing>,
-              @InjectModel('Product') private productModel: Model<Product>) {}
+  constructor(@InjectModel('Listing') private readonly listingModel: Model<Listing>) {}
 
   async findAll(): Promise<Listing[]> {
     return this.listingModel.find().exec();
@@ -25,19 +24,37 @@ export class ListingService {
     }
 }
 
-  async appendProductToListing(listingId: string, productId: string): Promise<Listing> {
-    // Find the product by its ID
-    const product = await this.productModel.findById(productId).exec();
-    if (!product) {
-        throw new Error('Product not found');
-    }
+async addCardsToListing(
+  listingId: string, 
+  cards: { CardId: string; Price: number }[]
+) {
 
-    // Append the product to the Listing array of the specified listing
-    return this.listingModel.findByIdAndUpdate(
-        listingId,
-        { $push: { Listing: product } },
-        { new: true } // This option returns the updated document
+  console.log('Updating listing with ID:', listingId);
+  console.log('Cards to add:', cards);
+  try {
+    return await this.listingModel.updateOne(
+      { _id: listingId },
+      { $push: { Listed: { $each: cards } } }
     ).exec();
+  } catch (error) {
+    console.error('Error updating listing:', error);
+    throw new Error('Failed to update listing');
   }
+}
+
+async createListing(
+  VendorId: string,
+  Listed: { CardId: string; Price: number }[],
+  Total: number,
+  Sold: { CardId: string; CustomerId: string; Price: number }[]
+) {
+  const newListing = new this.listingModel({
+    VendorId,
+    Listed,
+    Total,
+    Sold
+  });
+  return newListing.save();
+}
 
 }
