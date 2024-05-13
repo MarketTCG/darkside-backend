@@ -6,6 +6,7 @@ import { CardsModule } from './templates/cards.module';
 import { CatalogueModule } from './catalogue/catalogue.module';
 import { ProductModule } from './product/product.module';
 import { ListingModule } from './listing/listing.module';
+import { InventoryModule } from './inventory/inventory.module';
 
 
 @Module({
@@ -14,7 +15,8 @@ import { ListingModule } from './listing/listing.module';
     CardsModule,
     CatalogueModule,
     ProductModule,
-    ListingModule
+    ListingModule,
+    InventoryModule
   ],
   controllers: [AppController],
   providers: [AppService],
