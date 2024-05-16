@@ -7,6 +7,8 @@ import { CatalogueModule } from './catalogue/catalogue.module';
 import { ProductModule } from './product/product.module';
 import { ListingModule } from './listing/listing.module';
 import { InventoryModule } from './inventory/inventory.module';
+import { OrderModule } from './order/order.module';
+import { UserModule } from './user/user.module';
 
 
 @Module({
@@ -16,7 +18,9 @@ import { InventoryModule } from './inventory/inventory.module';
     CatalogueModule,
     ProductModule,
     ListingModule,
-    InventoryModule
+    InventoryModule,
+    OrderModule,
+    UserModule
   ],
   controllers: [AppController],
   providers: [AppService],
