@@ -17,12 +17,13 @@ export class ListingController {
     return this.listingService.findById(id);
  }
 
- @Put(':id/cards')
-async addCardsToListing(
-  @Param('id') listingId: string,
+ @Put(':listingId/:productId/outputListing')
+async addCardsToListingAndProduct(
+  @Param('listingId') listingId: string,
+  @Param('productId') productId: string,
   @Body() cards: { CardId: string; Price: number }[],
 ) {
-  return this.listingService.addCardsToListing(listingId, cards);
+  return this.listingService.addCardsToListing(listingId, productId, cards);
 }
 
 @Post()

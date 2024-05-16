@@ -2,12 +2,16 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Listing } from './models/listing.model';
+import { Product } from '../product/models/product.model';
 import { Types } from 'mongoose';
 
 
 @Injectable()
 export class ListingService {
-  constructor(@InjectModel('Listing') private readonly listingModel: Model<Listing>) {}
+  constructor(
+    @InjectModel('Listing') private readonly listingModel: Model<Listing>,
+    @InjectModel('Product') private readonly productModel: Model<Product>
+  ) {}
 
   async findAll(): Promise<Listing[]> {
     return this.listingModel.find().exec();
@@ -24,14 +28,22 @@ export class ListingService {
     }
 }
 
-async addCardsToListing(
-  listingId: string, 
+async addCardsToListingAndProduct(
+  listingId: string,
+  productId: string,
   cards: { CardId: string; Price: number }[]
 ) {
 
   console.log('Updating listing with ID:', listingId);
   console.log('Cards to add:', cards);
+
   try {
+
+    await this.productModel.updateOne(
+      { _id: productId },
+      { $push: { Listing: { $each: cards } } }
+    ).exec()
+
     return await this.listingModel.updateOne(
       { _id: listingId },
       { $push: { Listed: { $each: cards } } }
@@ -40,6 +52,12 @@ async addCardsToListing(
     console.error('Error updating listing:', error);
     throw new Error('Failed to update listing');
   }
+}
+
+async addCardsToProduct(
+
+) {
+
 }
 
 async createListing(

@@ -11,11 +11,12 @@ export class InventoryService {
     return await this.inventoryModel.find().exec();
  }
 
+ /*
  async handleFile(file: Express.Multer.File): Promise<any> {
   const cards = JSON.parse(file.buffer.toString());
   console.log(cards)
   return this.addCardsToDatabase(cards);
-}
+}*/
 
 private async addCardsToDatabase(cards: any[]): Promise<any> {
   

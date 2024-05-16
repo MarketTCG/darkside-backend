@@ -11,12 +11,13 @@ export class InventoryController {
  async findAll(): Promise<Inventory[]> {
     return this.inventoryService.findAll();
  }
-
+/*
  @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(@UploadedFile() file: Express.Multer.File) {
     return this.inventoryService.handleFile(file);
   }
+  */
 
 
 }
