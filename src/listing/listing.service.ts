@@ -54,10 +54,35 @@ async addCardsToListingAndProduct(
   }
 }
 
-async addCardsToProduct(
 
+async removeCardsToListingAndProduct(
+  listingId: string,
+  productId: string,
+  id: string
 ) {
 
+  console.log('Updating listing with ID:', listingId);
+  console.log('Cards to add:', id);
+
+  try {
+
+    await this.productModel.updateOne(
+      { _id: productId },
+      { $pull: { Listing: { _id: id } } }
+    ).exec()
+
+    return await this.listingModel.updateOne(
+      { _id: listingId },
+      { $pull: { Listed: { _id: id } } }
+    ).exec();
+  } catch (error) {
+    console.error('Error updating listing:', error);
+    throw new Error('Failed to update listing');
+  }
+}
+
+async deleteListing(id: string) {
+  return this.listingModel.deleteOne({ _id: id }).exec();
 }
 
 async createListing(

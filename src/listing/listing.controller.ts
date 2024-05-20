@@ -1,4 +1,4 @@
-import { Controller, Get, Query, Put, Body, Param, Post } from '@nestjs/common';
+import { Controller, Get, Query, Put, Body, Param, Post, Delete } from '@nestjs/common';
 import { ListingService } from './listing.service';
 import { Listing } from './models/listing.model';
 import { CreateListingDto } from './dto/create-listing.dto';
@@ -26,6 +26,16 @@ async addCardsToListingAndProduct(
   return this.listingService.addCardsToListingAndProduct(listingId, productId, cards);
 }
 
+@Delete(':listingId/:productId/deleteListing')
+async removeCardsToListingAndProduct(
+  @Param('listingId') listingId: string,
+  @Param('productId') productId: string,
+  @Body() id: string,
+) {
+  return this.listingService.removeCardsToListingAndProduct(listingId, productId, id);
+}
+
+
 @Post()
   createListing(
     @Body() createListingDto: CreateListingDto
@@ -36,6 +46,13 @@ async addCardsToListingAndProduct(
       createListingDto.Total,
       createListingDto.Sold
     );
+  }
+
+  @Delete(':id')
+  deleteListing(
+    @Param('id') id: string
+  ) {
+    return this.listingService.deleteListing(id);
   }
 
 }
