@@ -23,7 +23,7 @@ async addCardsToListingAndProduct(
   @Param('productId') productId: string,
   @Body() cards: { CardId: string; Price: number }[],
 ) {
-  return this.listingService.addCardsToListing(listingId, productId, cards);
+  return this.listingService.addCardsToListingAndProduct(listingId, productId, cards);
 }
 
 @Post()
