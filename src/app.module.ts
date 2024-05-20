@@ -9,6 +9,7 @@ import { ListingModule } from './listing/listing.module';
 import { InventoryModule } from './inventory/inventory.module';
 import { OrderModule } from './order/order.module';
 import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
 
 
 @Module({
@@ -20,7 +21,8 @@ import { UserModule } from './user/user.module';
     ListingModule,
     InventoryModule,
     OrderModule,
-    UserModule
+    UserModule,
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService],
