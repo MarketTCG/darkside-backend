@@ -1,27 +1,36 @@
 // src/auth/auth.service.ts
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException  } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
 import { JwtService } from '@nestjs/jwt';
-import { User} from '../user/models/user.model';
+import { Model } from 'mongoose';
+import { User } from '../user/models/user.model';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly jwtService: JwtService) {}
+  constructor(
+    private readonly jwtService: JwtService,
+    @InjectModel('User') private readonly userModel: Model<User>
+  ) {}
 
   async register(user: User): Promise<User> {
-    const hashedPassword = await bcrypt.hash(user.password, 10);
+    const hashedPassword = await bcrypt.hash(user.Password, 10);
     const newUser = new this.userModel({
-      username: user.username,
+      username: user.Username,
       password: hashedPassword,
       // Other properties...
     });
     return newUser.save();
   }
 
-  async login(user: User): Promise<User> {
-    const { user } = await this.jwtService.validateUser(user.id);
-    if (!user) {
+  async signIn(username: string, pass: string): Promise<{ access_token: string }> {
+    const user = await this.userModel.findOne({username});
+    if (user?.Password !== pass) {
       throw new UnauthorizedException();
     }
-    return user;
+    const payload = { sub: user._id, username: user.Username };
+    return {
+      access_token: await this.jwtService.signAsync(payload),
+    };
   }
 }
