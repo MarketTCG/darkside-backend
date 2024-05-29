@@ -1,7 +1,8 @@
 import { Schema } from 'mongoose';
 
 export const UserSchema = new Schema({
-  Username: String
+  username: String,
+  password: String
 }, {collection:'users',
   versionKey: false
 })
