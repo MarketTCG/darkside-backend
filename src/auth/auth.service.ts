@@ -9,8 +9,8 @@ import * as bcrypt from 'bcrypt';
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly jwtService: JwtService,
-    @InjectModel('User') private readonly userModel: Model<User>
+    @InjectModel('User') private readonly userModel: Model<User>,
+    private jwtService: JwtService
   ) {}
 
   async register(user: User): Promise<User> {
@@ -25,6 +25,9 @@ export class AuthService {
 
   async signIn(username: string, pass: string): Promise<{ access_token: string }> {
     const user = await this.userModel.findOne({username});
+    console.log(user?.Password)
+    console.log(username)
+    console.log(pass)
     if (user?.Password !== pass) {
       throw new UnauthorizedException();
     }
