@@ -14,9 +14,9 @@ export class AuthService {
   ) {}
 
   async register(user: User): Promise<User> {
-    const hashedPassword = await bcrypt.hash(user.Password, 10);
+    const hashedPassword = await bcrypt.hash(user.password, 10);
     const newUser = new this.userModel({
-      username: user.Username,
+      username: user.username,
       password: hashedPassword,
       // Other properties...
     });
@@ -25,13 +25,11 @@ export class AuthService {
 
   async signIn(username: string, pass: string): Promise<{ access_token: string }> {
     const user = await this.userModel.findOne({username});
-    console.log(user?.Password)
-    console.log(username)
-    console.log(pass)
-    if (user?.Password !== pass) {
+  
+    if (user?.password !== pass) {
       throw new UnauthorizedException();
     }
-    const payload = { sub: user._id, username: user.Username };
+    const payload = { sub: user._id, username: user.username };
     return {
       access_token: await this.jwtService.signAsync(payload),
     };
