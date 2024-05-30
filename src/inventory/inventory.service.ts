@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Inventory } from './models/inventory.model'; // Adjust the import path as necessary
+import { InventoryDto } from './dto/inventory.dto'; // Adjust the import path as necessary
 
 @Injectable()
 export class InventoryService {
@@ -11,15 +12,10 @@ export class InventoryService {
     return await this.inventoryModel.find().exec();
  }
 
- /*
- async handleFile(file: Express.Multer.File): Promise<any> {
-  const cards = JSON.parse(file.buffer.toString());
-  console.log(cards)
-  return this.addCardsToDatabase(cards);
-}*/
+ async create(createInventoryDto: InventoryDto): Promise<Inventory> {
+   const createdInventory = new this.inventoryModel(createInventoryDto);
+   return createdInventory.save();
+ }
 
-private async addCardsToDatabase(cards: any[]): Promise<any> {
-  
-}
 
 }

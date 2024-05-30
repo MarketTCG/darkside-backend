@@ -1,25 +1,25 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { Model } from 'mongoose';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { Product } from './models/product.model';
-import { Types } from 'mongoose';
+import { ProductDto } from './dto/product.dto';
 
 @Injectable()
 export class ProductService {
-  constructor(@InjectModel('Product') private readonly productModel: Model<Product>) {}
+  constructor(@InjectModel('Product') private productModel: Model<Product>) {}
 
   async findAll(): Promise<Product[]> {
     return this.productModel.find().exec();
   }
 
   async findById(id: string): Promise<Product> {
-    try {
-        const objectId = new Types.ObjectId(id);
-        console.log("searching for", objectId)
-        return this.productModel.findById(objectId).exec();
-    } catch (error) {
-        // Handle the error, e.g., by throwing a custom exception
-        throw new BadRequestException('Invalid ID format');
-    }
-}
+    return this.productModel.findById(id).exec();
+  }
+
+  /*
+  async create(createProductDto: ProductDto): Promise<Product> {
+    const createdProduct = new this.productModel(createProductDto);
+    return createdProduct.save();
+  }
+  */
 }

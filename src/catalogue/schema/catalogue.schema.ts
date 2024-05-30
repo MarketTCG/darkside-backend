@@ -1,3 +1,4 @@
+// src/catalogue/schemas/catalogue.schema.ts
 import { Schema } from 'mongoose';
 
 export const CatalogueSchema = new Schema({
@@ -5,9 +6,9 @@ export const CatalogueSchema = new Schema({
   number: String,
   name: String,
   type: String,
-  aspects: [String], // Use Mixed type if the structure is not known
-  traits: [String], // Use Mixed type if the structure is not known
-  arenas: [String], // Use Mixed type if the structure is not known
+  aspects: [String],
+  traits: [String],
+  arenas: [String],
   cost: String,
   power: String,
   hp: String,
@@ -19,8 +20,6 @@ export const CatalogueSchema = new Schema({
   frontArt: String,
   variantType: String,
   marketPrice: String,
- },{ collection: 'catalogue' });
+}, { collection: 'catalogue' });
 
-
- export default CatalogueSchema;
- 
+export default CatalogueSchema;

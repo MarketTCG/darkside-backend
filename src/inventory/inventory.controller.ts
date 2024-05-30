@@ -1,23 +1,25 @@
-import { Controller, Get, Post, UseInterceptors, UploadedFile } from '@nestjs/common';
+// src/inventory/inventory.controller.ts
+import { Controller, Get, Post, Body } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { InventoryService } from './inventory.service';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { Inventory } from './models/inventory.model'; // Adjust the import path as necessary
+import { InventoryDto } from './dto/inventory.dto';
 
+@ApiTags('inventory')
 @Controller('inventory')
 export class InventoryController {
- constructor(private readonly inventoryService: InventoryService) {}
+  constructor(private readonly inventoryService: InventoryService) {}
 
- @Get()
- async findAll(): Promise<Inventory[]> {
+  @Get()
+  @ApiOperation({ summary: 'Get all inventory items' })
+  @ApiResponse({ status: 200, description: 'Successful retrieval', type: [InventoryDto] })
+  async findAll(): Promise<InventoryDto[]> {
     return this.inventoryService.findAll();
- }
-/*
- @Post('upload')
-  @UseInterceptors(FileInterceptor('file'))
-  async uploadFile(@UploadedFile() file: Express.Multer.File) {
-    return this.inventoryService.handleFile(file);
   }
-  */
 
-
+  @Post()
+  @ApiOperation({ summary: 'Create a new inventory item' })
+  @ApiResponse({ status: 201, description: 'Inventory item created successfully', type: InventoryDto })
+  async create(@Body() createInventoryDto: InventoryDto): Promise<InventoryDto> {
+    return this.inventoryService.create(createInventoryDto);
+  }
 }
