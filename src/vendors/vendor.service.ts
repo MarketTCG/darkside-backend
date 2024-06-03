@@ -1,0 +1,32 @@
+import { Injectable, BadRequestException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { Vendor } from './model/vendor.model';
+import { VendorDto } from './dto/vendor.dto';
+import { Types } from 'mongoose';
+
+@Injectable()
+export class VendorService {
+  constructor(@InjectModel('Vendor') private readonly vendorModel: Model<Vendor>) {}
+
+  async create(createVendorDto: VendorDto): Promise<Vendor> {
+    const createdVendor = new this.vendorModel(createVendorDto);
+    return createdVendor.save();
+  }
+
+  async findAll(): Promise<Vendor[]> {
+    return this.vendorModel.find().exec();
+  }
+
+  async findById(id: string): Promise<Vendor> {
+    try {
+        const objectId = new Types.ObjectId(id);
+        console.log("searching for", objectId)
+        return this.vendorModel.findById(objectId).exec();
+    } catch (error) {
+        // Handle the error, e.g., by throwing a custom exception
+        throw new BadRequestException('Invalid ID format');
+    }
+}
+
+}

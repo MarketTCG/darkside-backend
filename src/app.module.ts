@@ -10,6 +10,7 @@ import { OrderModule } from './order/order.module';
 import { UserModule } from './user/user.module';
 import { HostnameModule } from './hostname/hostname.module';
 import { AuthModule } from './auth/auth.module';
+import { VendorModule } from './vendors/vendor.module';
 
 @Module({
   imports: [
@@ -21,7 +22,8 @@ import { AuthModule } from './auth/auth.module';
     OrderModule,
     UserModule,
     HostnameModule,
-    AuthModule
+    AuthModule,
+    VendorModule
   ],
   controllers: [AppController],
   providers: [AppService],
