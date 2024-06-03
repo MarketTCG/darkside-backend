@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { Catalogue } from './models/catalogue.model'; // Adjust the import path as necessary
 
 @Injectable()
@@ -29,6 +29,17 @@ async search(key: string, value: string): Promise<any> {
 
   // Execute the query
   return this.catalogueModel.find(query).exec();
+}
+
+async findImageByNumber(number: string): Promise<any> {
+  try {
+      //console.log("searching for", frontArt)
+      const picture = "https://d3alac64utt23z.cloudfront.net/images/cards/SOR/" +number+".png"
+      return picture
+  } catch (error) {
+      // Handle the error, e.g., by throwing a custom exception
+      throw new BadRequestException('Invalid format');
+  }
 }
 
 }

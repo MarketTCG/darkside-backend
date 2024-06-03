@@ -24,4 +24,12 @@ export class CatalogueController {
   async search(@Query('key') key: string, @Query('value') value: string): Promise<Catalogue[]> {
     return this.catalogueService.search(key, value);
   }
+
+  @Get('frontart')
+  @ApiOperation({ summary: 'Get Picture By Number' })
+  @ApiQuery({ name: 'number', required: true, description: 'The Number of the Card' })
+  @ApiResponse({ status: 200, description: 'Successful retrieval', type: Catalogue })
+  async findByNumber(@Query('number') number: string): Promise<Catalogue> {
+    return this.catalogueService.findImageByNumber(number);
+  }
 }
