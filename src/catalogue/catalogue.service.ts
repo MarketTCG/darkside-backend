@@ -34,8 +34,11 @@ async search(key: string, value: string): Promise<any> {
 async findImageByNumber(number: string): Promise<any> {
   try {
       //console.log("searching for", frontArt)
+      console.log(number)
       const picture = "https://d3alac64utt23z.cloudfront.net/images/cards/SOR/" +number+".png"
-      return picture
+      console.log(picture)
+      const result = await this.catalogueModel.find({ FrontArt: "https://d3alac64utt23z.cloudfront.net/images/cards/SOR/"+number+".png" },{ FrontArt: 1, BackArt: 1, _id: 0 }).exec();
+      return result
   } catch (error) {
       // Handle the error, e.g., by throwing a custom exception
       throw new BadRequestException('Invalid format');

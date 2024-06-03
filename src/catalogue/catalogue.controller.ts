@@ -25,7 +25,7 @@ export class CatalogueController {
     return this.catalogueService.search(key, value);
   }
 
-  @Get('frontart')
+  @Get('artwork')
   @ApiOperation({ summary: 'Get Picture By Number' })
   @ApiQuery({ name: 'number', required: true, description: 'The Number of the Card' })
   @ApiResponse({ status: 200, description: 'Successful retrieval', type: Catalogue })
