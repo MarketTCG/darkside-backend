@@ -2,7 +2,7 @@ name: Docker Image CI
 
 on:
   push:
-    #branches: [ "main" ]
+    #branches: [ "master" ]
     #tags: ["v[0-9]+.[0-9]+.[0-9]*"]
     tags: ["v*"]
 
@@ -23,7 +23,7 @@ jobs:
         password: ${{secrets.DOCKER_PASSWORD}}
       
     - name: "Build, Tag, and push the Docker image - latest"
-      if: ${{ github.ref_name == 'main' }}
+      if: ${{ github.ref_name == 'master' }}
       env:
         IMAGE_NAME: maylife/darksidetcg-backend
         IMAGE_TAG: latest
@@ -32,7 +32,7 @@ jobs:
         docker push $IMAGE_NAME:$IMAGE_TAG
         
     - name: "Build, Tag, and push the Docker image - Tag"
-      if: ${{ github.ref_name != 'main' }}
+      if: ${{ github.ref_name != 'master' }}
       env:
         IMAGE_NAME: maylife/darksidetcg-backend
         IMAGE_TAG: ${{ github.ref_name }}
