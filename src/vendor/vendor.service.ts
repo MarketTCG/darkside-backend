@@ -1,7 +1,7 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Vendor } from './model/vendor.model';
+import { Vendor } from './models/vendor.model';
 import { VendorDto } from './dto/vendor.dto';
 import { Types } from 'mongoose';
 

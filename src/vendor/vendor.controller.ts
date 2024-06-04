@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Query } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponseMetadata, ApiQuery, ApiResponse } from '@nestjs/swagger';
 import { VendorService } from './vendor.service';
 import { VendorDto } from './dto/vendor.dto';
-import { Vendor } from './model/vendor.model';
+import { Vendor } from './models/vendor.model';
 
 @ApiTags('vendors')
 @Controller('vendors')

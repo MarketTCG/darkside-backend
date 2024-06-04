@@ -10,7 +10,7 @@ import { OrderModule } from './order/order.module';
 import { UserModule } from './user/user.module';
 import { HostnameModule } from './hostname/hostname.module';
 import { AuthModule } from './auth/auth.module';
-import { VendorModule } from './vendors/vendor.module';
+import { VendorModule } from './vendor/vendor.module';
 
 @Module({
   imports: [
