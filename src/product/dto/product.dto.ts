@@ -3,18 +3,31 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsNumber, IsArray, IsBoolean, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 
-class ListingItemDto {
-  @ApiProperty({ example: '12345', description: 'The ID of the listing item' })
-  @IsString()
-  _id: string;
+class ListingDto {
+  @ApiProperty({ example: [], description: 'List of NM items' })
+  @IsArray()
+  @IsString({ each: true })
+  NM: string[];
 
-  @ApiProperty({ example: '67890', description: 'The ID of the card' })
-  @IsString()
-  CardId: string;
+  @ApiProperty({ example: [], description: 'List of LP items' })
+  @IsArray()
+  @IsString({ each: true })
+  LP: string[];
 
-  @ApiProperty({ example: 100, description: 'The price of the listing item' })
-  @IsNumber()
-  Price: number;
+  @ApiProperty({ example: [], description: 'List of MP items' })
+  @IsArray()
+  @IsString({ each: true })
+  MP: string[];
+
+  @ApiProperty({ example: [], description: 'List of HP items' })
+  @IsArray()
+  @IsString({ each: true })
+  HP: string[];
+
+  @ApiProperty({ example: [], description: 'List of D items' })
+  @IsArray()
+  @IsString({ each: true })
+  D: string[];
 }
 
 export class ProductDto {
@@ -30,11 +43,10 @@ export class ProductDto {
   @IsNumber()
   Price: number;
 
-  @ApiProperty({ type: [ListingItemDto], description: 'List of items in the listing' })
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => ListingItemDto)
-  Listing: ListingItemDto[];
+  @ApiProperty({ type: ListingDto, description: 'List of items in the listing' })
+  @ValidateNested()
+  @Type(() => ListingDto)
+  Listing: ListingDto;
 
   @ApiProperty({ example: ['sale1', 'sale2'], description: 'List of sales' })
   @IsArray()
@@ -44,4 +56,8 @@ export class ProductDto {
   @ApiProperty({ example: true, description: 'The variant type of the product' })
   @IsBoolean()
   VariantType: boolean;
+
+  @ApiProperty({ example: 'artwork_url', description: 'The artwork of the product' })
+  @IsString()
+  artwork: string;
 }
