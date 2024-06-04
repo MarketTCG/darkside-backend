@@ -11,6 +11,7 @@ import { UserModule } from './user/user.module';
 import { HostnameModule } from './hostname/hostname.module';
 import { AuthModule } from './auth/auth.module';
 import { VendorModule } from './vendor/vendor.module';
+import { UtilModule } from './utils/util.module';
 
 @Module({
   imports: [
@@ -23,7 +24,8 @@ import { VendorModule } from './vendor/vendor.module';
     UserModule,
     HostnameModule,
     AuthModule,
-    VendorModule
+    VendorModule,
+    UtilModule
   ],
   controllers: [AppController],
   providers: [AppService],
