@@ -1,6 +1,14 @@
+// src/vendor/models/vendor.model.ts
+import { Document } from 'mongoose';
 
-export class Vendor{
-  CustomerID: string;
-  InventoryID: string;
+export class InventoryItem {
+  _id: string;
+  productID: string;
+  price: number;
+}
+
+export class Vendor extends Document {
+  UserID: string;
+  Inventory: InventoryItem[];
   VendorRating: number;
 }
