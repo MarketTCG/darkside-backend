@@ -2,7 +2,7 @@ import { Controller, Get, Query, Put, Body, Param, Post, Delete } from '@nestjs/
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiQuery, ApiBody } from '@nestjs/swagger';
 import { ListingService } from './listing.service';
 import { Listing } from './models/listing.model';
-import { CreateListingDto } from './dto/create-listing.dto';
+import { ListingDto } from './dto/create-listing.dto';
 
 @ApiTags('listing')
 @Controller('listing')
@@ -28,7 +28,7 @@ export class ListingController {
   @ApiOperation({ summary: 'Add cards to listing and product' })
   @ApiParam({ name: 'listingId', required: true, description: 'The ID of the listing' })
   @ApiParam({ name: 'productId', required: true, description: 'The ID of the product' })
-  @ApiBody({ type: [CreateListingDto], description: 'Array of cards to add' })
+  @ApiBody({ type: [ListingDto], description: 'Array of cards to add' })
   @ApiResponse({ status: 200, description: 'Cards added successfully' })
   async addCardsToListingAndProduct(
     @Param('listingId') listingId: string,
@@ -54,16 +54,16 @@ export class ListingController {
 
   @Post()
   @ApiOperation({ summary: 'Create a new listing' })
-  @ApiBody({ type: CreateListingDto, description: 'Details of the new listing' })
-  @ApiResponse({ status: 201, description: 'Listing created successfully', type: CreateListingDto })
+  @ApiBody({ type: ListingDto, description: 'Details of the new listing' })
+  @ApiResponse({ status: 201, description: 'Listing created successfully', type: ListingDto })
   createListing(
-    @Body() createListingDto: CreateListingDto
+    @Body() listingDto: ListingDto
   ) {
     return this.listingService.createListing(
-      createListingDto.VendorId,
-      createListingDto.Listed,
-      createListingDto.Total,
-      createListingDto.Sold
+      listingDto.VendorId,
+      listingDto.Total,
+      listingDto.Sold,
+      listingDto.Listing
     );
   }
 

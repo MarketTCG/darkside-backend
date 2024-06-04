@@ -87,17 +87,18 @@ async deleteListing(id: string) {
 
 async createListing(
   VendorId: string,
-  Listed: { CardId: string; Price: number }[],
   Total: number,
-  Sold: { CardId: string; CustomerId: string; Price: number }[]
+  Sold: string[],
+  ListingDetails: { NM: string[]; LP: string[]; MP: string[]; HP: string[]; D: string[] }
 ) {
   const newListing = new this.listingModel({
     VendorId,
-    Listed,
     Total,
-    Sold
+    Sold,
+    Listing: ListingDetails
   });
   return newListing.save();
 }
+
 
 }

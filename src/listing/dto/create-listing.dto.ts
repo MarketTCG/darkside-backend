@@ -1,50 +1,55 @@
-// src/listing/dto/create-listing.dto.ts
+// src/product/dto/listing.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsNumber, IsArray, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 
-class ListedItemDto {
-  @ApiProperty({ example: '12345', description: 'The ID of the card' })
-  @IsString()
-  CardId: string;
+class ListingDetailsDto {
+  @ApiProperty({ example: [], description: 'List of NM items' })
+  @IsArray()
+  @IsString({ each: true })
+  NM: string[];
 
-  @ApiProperty({ example: 100, description: 'The price of the listed item' })
-  @IsNumber()
-  Price: number;
+  @ApiProperty({ example: [], description: 'List of LP items' })
+  @IsArray()
+  @IsString({ each: true })
+  LP: string[];
+
+  @ApiProperty({ example: [], description: 'List of MP items' })
+  @IsArray()
+  @IsString({ each: true })
+  MP: string[];
+
+  @ApiProperty({ example: [], description: 'List of HP items' })
+  @IsArray()
+  @IsString({ each: true })
+  HP: string[];
+
+  @ApiProperty({ example: [], description: 'List of D items' })
+  @IsArray()
+  @IsString({ each: true })
+  D: string[];
 }
 
-class SoldItemDto {
-  @ApiProperty({ example: '12345', description: 'The ID of the card' })
+export class ListingDto {
+  @ApiProperty({ example: '6641911de3052da3252bcdcd', description: 'The ID of the listing' })
   @IsString()
-  CardId: string;
+  _id: string;
 
-  @ApiProperty({ example: '54321', description: 'The ID of the customer' })
-  @IsString()
-  CustomerId: string;
-
-  @ApiProperty({ example: 100, description: 'The price of the sold item' })
-  @IsNumber()
-  Price: number;
-}
-
-export class CreateListingDto {
-  @ApiProperty({ example: 'vendor123', description: 'The ID of the vendor' })
+  @ApiProperty({ example: 'Vendor123', description: 'The ID of the vendor' })
   @IsString()
   VendorId: string;
 
-  @ApiProperty({ type: [ListedItemDto], description: 'List of items listed' })
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => ListedItemDto)
-  Listed: ListedItemDto[];
-
-  @ApiProperty({ example: 200, description: 'Total amount' })
+  @ApiProperty({ example: 100, description: 'The total number of items' })
   @IsNumber()
   Total: number;
 
-  @ApiProperty({ type: [SoldItemDto], description: 'List of items sold' })
+  @ApiProperty({ example: ['sold1', 'sold2'], description: 'List of sold items' })
   @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => SoldItemDto)
-  Sold: SoldItemDto[];
+  @IsString({ each: true })
+  Sold: string[];
+
+  @ApiProperty({ type: ListingDetailsDto, description: 'Details of the listing' })
+  @ValidateNested()
+  @Type(() => ListingDetailsDto)
+  Listing: ListingDetailsDto;
 }
