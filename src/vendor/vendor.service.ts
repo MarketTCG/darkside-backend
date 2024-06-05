@@ -3,15 +3,21 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Vendor } from './models/vendor.model';
 import { VendorDto } from './dto/vendor.dto';
+import { AddInventoryDto } from './dto/add-inventory.dto'
+import { CreateVendorDto } from './dto/create-vendor.dto';
 import { Types } from 'mongoose';
 
 @Injectable()
 export class VendorService {
   constructor(@InjectModel('Vendor') private readonly vendorModel: Model<Vendor>) {}
 
-  async create(createVendorDto: VendorDto): Promise<Vendor> {
-    const createdVendor = new this.vendorModel(createVendorDto);
-    return createdVendor.save();
+  async createVendor(userId: string) {
+    const newVendor = new this.vendorModel({
+      UserID: userId,
+      Inventory: [],
+      VendorRating: 0,
+    });
+    return newVendor.save();
   }
 
   async findAll(): Promise<Vendor[]> {
@@ -29,4 +35,13 @@ export class VendorService {
     }
 }
 
+async addInventoryItems(vendorId: string, addInventoryDto: AddInventoryDto) {
+  const { items } = addInventoryDto;
+  return this.vendorModel.findByIdAndUpdate(
+    vendorId,
+    { $push: { Inventory: { $each: items } } },
+    { new: true }
+  );
+
+}
 }

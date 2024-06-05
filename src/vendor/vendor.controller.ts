@@ -1,7 +1,9 @@
-import { Controller, Get, Post, Body, Query } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponseMetadata, ApiQuery, ApiResponse } from '@nestjs/swagger';
+import { Controller, Get, Post, Body, Query, Param } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponseMetadata, ApiQuery, ApiResponse, ApiBody, ApiParam } from '@nestjs/swagger';
 import { VendorService } from './vendor.service';
 import { VendorDto } from './dto/vendor.dto';
+import { AddInventoryDto } from './dto/add-inventory.dto'
+import { CreateVendorDto } from './dto/create-vendor.dto';
 import { Vendor } from './models/vendor.model';
 
 @ApiTags('vendors')
@@ -17,12 +19,15 @@ export class VendorController {
     return this.vendorService.findById(id);
   }
 
-  @Post()
-  @ApiOperation({ summary: 'Create a new vendor' })
-  @ApiResponse({ status: 201, description: 'The vendor has been successfully created.', type: VendorDto })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  async create(@Body() createVendorDto: VendorDto): Promise<Vendor> {
-    return this.vendorService.create(createVendorDto);
+  ////////////////
+
+  @Post(':userId')
+  @ApiParam({ name: 'userId', required: true, description: 'The ID of the user' })
+  @ApiResponse({ status: 201, description: "The vendor has been successfully created."})
+  async createVendor(
+    @Param('userId') userId: string,
+  ) {
+    return this.vendorService.createVendor(userId);
   }
 
   @Get()
@@ -30,5 +35,16 @@ export class VendorController {
   @ApiResponse({ status: 200, description: 'Return all vendors', type: [VendorDto] })
   async findAll(): Promise<Vendor[]> {
     return this.vendorService.findAll();
+  }
+
+  @Post(':id/inventory')
+  @ApiOperation({ summary: 'Add inventory items to vendor' })
+  @ApiBody({ type: [AddInventoryDto], description: 'Array of cards to add' })
+  @ApiResponse({ status: 201, description: 'Items pushed to vendor', type: [AddInventoryDto] })
+  async addInventoryItems(
+    @Param('id') vendorId: string,
+    @Body() addInventoryDto: AddInventoryDto
+  ) {
+    return this.vendorService.addInventoryItems(vendorId, addInventoryDto);
   }
 }

@@ -2,9 +2,9 @@
 import { Document } from 'mongoose';
 
 export class InventoryItem {
-  _id: string;
-  productID: string;
-  price: number;
+  VendorID: string;
+  ProductID: string;
+  Price: number;
 }
 
 export class Vendor extends Document {
