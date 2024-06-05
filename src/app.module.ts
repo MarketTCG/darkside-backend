@@ -5,13 +5,13 @@ import { AppService } from './app.service';
 import { CatalogueModule } from './catalogue/catalogue.module';
 import { ProductModule } from './product/product.module';
 import { ListingModule } from './listing/listing.module';
-import { InventoryModule } from './inventory/inventory.module';
 import { OrderModule } from './order/order.module';
 import { UserModule } from './user/user.module';
 import { HostnameModule } from './hostname/hostname.module';
 import { AuthModule } from './auth/auth.module';
 import { VendorModule } from './vendor/vendor.module';
 import { UtilModule } from './utils/util.module';
+import { CardModule } from './card/card.module';
 
 @Module({
   imports: [
@@ -19,13 +19,13 @@ import { UtilModule } from './utils/util.module';
     CatalogueModule,
     ProductModule,
     ListingModule,
-    InventoryModule,
     OrderModule,
     UserModule,
     HostnameModule,
     AuthModule,
     VendorModule,
-    UtilModule
+    UtilModule,
+    CardModule
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -4,6 +4,7 @@ import { VendorService } from './vendor.service';
 import { VendorDto } from './dto/vendor.dto';
 import { AddInventoryDto } from './dto/add-inventory.dto'
 import { CreateVendorDto } from './dto/create-vendor.dto';
+import { CreateCardDto } from 'src/card/dto/create-card.dto';
 import { Vendor } from './models/vendor.model';
 
 @ApiTags('vendors')
@@ -39,12 +40,12 @@ export class VendorController {
 
   @Post(':id/inventory')
   @ApiOperation({ summary: 'Add inventory items to vendor' })
-  @ApiBody({ type: [AddInventoryDto], description: 'Array of cards to add' })
-  @ApiResponse({ status: 201, description: 'Items pushed to vendor', type: [AddInventoryDto] })
+  @ApiBody({ type: CreateCardDto, description: 'Card to add' })
+  @ApiResponse({ status: 201, description: 'Item pushed to vendor' })
   async addInventoryItems(
     @Param('id') vendorId: string,
-    @Body() addInventoryDto: AddInventoryDto
+    @Body() createCardDto: CreateCardDto
   ) {
-    return this.vendorService.addInventoryItems(vendorId, addInventoryDto);
+    return this.vendorService.addInventoryItems(vendorId, createCardDto);
   }
 }
