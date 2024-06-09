@@ -10,4 +10,9 @@ export class SignInDto {
   @ApiProperty({ example: 'testpassword', description: 'The password of the user' })
   @IsString()
   readonly password: string;
+
+  @ApiProperty({ example: 'test@gmail.com', description: 'The email of the user' })
+  @IsString()
+  readonly email: string;
+
 }
