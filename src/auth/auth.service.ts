@@ -16,6 +16,13 @@ export class AuthService {
     return this.jwtService.sign(payload);
   }
 
+  async oAuthLogin(user: any) {
+    const payload = { email: user.email, sub: user.id };
+    return {
+      access_token: this.jwtService.sign(payload),
+    };
+  }
+
   async signIn(username: string, pass: string): Promise<{ access_token: string }> {
     const user = await this.userModel.findOne({ username });
   
@@ -40,16 +47,6 @@ export class AuthService {
     return {
       access_token: this.jwtService.sign(payload),
     };
-  }
-
-  async register(user: User): Promise<User> {
-    const hashedPassword = await bcrypt.hash(user.password, 10);
-    const newUser = new this.userModel({
-      username: user.username,
-      password: hashedPassword,
-      email: user.email
-    });
-    return newUser.save();
   }
 
   async validateGoogleUser(googleId: string, email: string, firstName: string, lastName: string, picture: string): Promise<{ access_token: string }> {

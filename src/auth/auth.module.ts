@@ -6,6 +6,9 @@ import { GoogleStrategy } from './strategies/google.strategy';
 import { ConfigModule } from '@nestjs/config';
 import { AuthController } from './auth.controller';
 import { JwtModule } from '@nestjs/jwt';
+import { GoogleOAuthGuard } from './guard/google-oauth.guard';
+import { JwtStrategy } from './strategies/jwt.strategy';
+import { JwtAuthGuard } from './guard/jwt.guard';
 import UserSchema from '../user/schemas/user.schema';
 
 @Module({
@@ -20,7 +23,7 @@ import UserSchema from '../user/schemas/user.schema';
       signOptions: { expiresIn: '60m' },
     }),
   ],
-  providers: [AuthService, GoogleStrategy],
+  providers: [AuthService, GoogleStrategy, GoogleOAuthGuard, JwtStrategy, JwtAuthGuard],
   controllers: [AuthController],
 })
 export class AuthModule {}
