@@ -1,15 +1,19 @@
 import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { GoogleOAuthGuard } from './guard/google-oauth.guard'
 import { JwtAuthGuard } from './guard/jwt.guard';
 import { Response } from 'express';
 
+@ApiTags('auth')
 @Controller('api/auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
   
   @Get('google')
+  @ApiOperation({ summary: 'Initiate Google OAuth' })
+  @ApiResponse({ status: 302, description: 'Redirects to Google OAuth' })
   @UseGuards(GoogleOAuthGuard)
   async googleAuth(@Req() req) {
     // Initiates Google OAuth
@@ -17,6 +21,8 @@ export class AuthController {
 
   @Get('google/callback')
   @UseGuards(GoogleOAuthGuard)
+  @ApiOperation({ summary: 'Google OAuth callback' })
+  @ApiResponse({ status: 302, description: 'Handles Google OAuth callback and redirects with JWT token' })
   async googleAuthRedirect(@Req() req, @Res() res: Response) {
     const jwt = await this.authService.oAuthLogin(req.user);
     res.redirect(`http://localhost:3000/oauth?token=${jwt.access_token}`);
@@ -24,11 +30,18 @@ export class AuthController {
 
   @Get('user')
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get user information' })
+  @ApiResponse({ status: 200, description: 'Returns the authenticated user information' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
   async getUser(@Req() req) {
     return req.user;
   }
 
   @Get('logout')
+  @ApiOperation({ summary: 'Logout user' })
+  @ApiResponse({ status: 302, description: 'Logs out the user and redirects to home page' })
+  @ApiResponse({ status: 500, description: 'Logout failed' })
   async logout(@Req() req, @Res() res: Response) {
     req.logout((err) => {
       if (err) {
