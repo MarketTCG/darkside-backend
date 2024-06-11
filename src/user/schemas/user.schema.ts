@@ -1,4 +1,5 @@
 import { Schema } from 'mongoose';
+import { Role } from '@roles/roles.enum'; // Adjust the import path as necessary
 
 export const UserSchema = new Schema({
   username: { type: String },
@@ -8,6 +9,7 @@ export const UserSchema = new Schema({
   firstName: { type: String },
   lastName: { type: String },
   picture: { type: String },
+  roles: { type: [String], enum: Role, default: [Role.User] }, // Add roles field
 }, {
   collection: 'users',
   versionKey: false

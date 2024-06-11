@@ -5,6 +5,9 @@ import { AuthService } from './auth.service';
 import { GoogleOAuthGuard } from './guard/google-oauth.guard'
 import { JwtAuthGuard } from './guard/jwt.guard';
 import { Response } from 'express';
+import { RolesGuard } from './guard/roles.guard';
+import { Roles } from '@roles/roles.decorator'
+import { Role } from '@roles/roles.enum';
 
 @ApiTags('auth')
 @Controller('api/auth')
@@ -29,15 +32,28 @@ export class AuthController {
   }
 
   @Get('user')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.User, Role.Admin)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Get user information' })
   @ApiResponse({ status: 200, description: 'Returns the authenticated user information' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Forbidden' })
   async getUser(@Req() req) {
     return req.user;
   }
 
+  @Get('admin')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.Admin)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Admin only endpoint' })
+  @ApiResponse({ status: 200, description: 'Returns admin information' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  async getAdmin(@Req() req) {
+    return { message: 'Admin access granted' };
+  }
+  
   @Get('logout')
   @ApiOperation({ summary: 'Logout user' })
   @ApiResponse({ status: 302, description: 'Logs out the user and redirects to home page' })

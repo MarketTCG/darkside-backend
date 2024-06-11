@@ -1,3 +1,5 @@
+import { Role } from '@roles/roles.enum'; // Adjust the import path as necessary
+
 export class User {
   username: string;
   password: string;
@@ -6,4 +8,5 @@ export class User {
   firstName?: string;
   lastName?: string;
   picture?: string;
+  roles: Role[]; // Add roles field
 }

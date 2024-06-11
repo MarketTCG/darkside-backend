@@ -10,6 +10,11 @@
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
+    "paths": {
+      "@roles/*": ["./src/roles/*"],
+      "@user/*": ["./src/user/*"],
+      "@types/*":["./src/types/*"],
+    },
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": false,

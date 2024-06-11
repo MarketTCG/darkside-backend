@@ -8,7 +8,7 @@ import * as bcrypt from 'bcrypt';
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectModel('User') private readonly userModel: Model<User>,
+    @InjectModel('User') private userModel: Model<User>,
     private jwtService: JwtService
   ) {}
 
@@ -17,7 +17,7 @@ export class AuthService {
   }
 
   async oAuthLogin(user: any) {
-    const payload = { email: user.email, sub: user.id };
+    const payload = { email: user.email, sub: user.id, roles: user.roles };
     return {
       access_token: this.jwtService.sign(payload),
     };
@@ -49,6 +49,7 @@ export class AuthService {
     };
   }
 
+/*
   async validateGoogleUser(googleId: string, email: string, firstName: string, lastName: string, picture: string): Promise<{ access_token: string }> {
     let user = await this.userModel.findOne({ googleId });
 
@@ -68,4 +69,5 @@ export class AuthService {
       access_token: this.jwtService.sign(payload),
     };
   }
+  */
 }
