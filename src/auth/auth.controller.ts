@@ -28,7 +28,7 @@ export class AuthController {
   @ApiResponse({ status: 302, description: 'Handles Google OAuth callback and redirects with JWT token' })
   async googleAuthRedirect(@Req() req, @Res() res: Response) {
     const jwt = await this.authService.oAuthLogin(req.user);
-    res.redirect(`https://darkside-backend-0e876decf5e2.herokuapp.com/oauth?token=${jwt.access_token}`);
+    res.redirect(`http://localhost:3000/oauth?token=${jwt.access_token}`);
   }
 
   @Get('user')
