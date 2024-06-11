@@ -8,6 +8,8 @@ import { Response } from 'express';
 import { RolesGuard } from './guard/roles.guard';
 import { Roles } from '@roles/roles.decorator'
 import { Role } from '@roles/roles.enum';
+import { GetUser } from '@user/decorators/get-user.decorator';
+import { User } from '@user/models/user.model'
 
 @ApiTags('auth')
 @Controller('api/auth')
@@ -33,14 +35,14 @@ export class AuthController {
 
   @Get('user')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.User, Role.Admin)
+  @Roles(Role.User)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Get user information' })
   @ApiResponse({ status: 200, description: 'Returns the authenticated user information' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Forbidden' })
-  async getUser(@Req() req) {
-    return req.user;
+  async getUser(@GetUser() user: User) {
+    return user;
   }
 
   @Get('admin')

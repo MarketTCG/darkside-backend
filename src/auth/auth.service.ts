@@ -17,57 +17,16 @@ export class AuthService {
   }
 
   async oAuthLogin(user: any) {
-    const payload = { email: user.email, sub: user.id, roles: user.roles };
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
-  }
-
-  async signIn(username: string, pass: string): Promise<{ access_token: string }> {
-    const user = await this.userModel.findOne({ username });
-  
-    if (!user || !(await bcrypt.compare(pass, user.password))) {
-      throw new UnauthorizedException();
+    const userDB = await this.userModel.findOne({ email: user.email }).exec();
+    if (!userDB) {
+      throw new Error('User not found');
     }
-    
-    const payload = { sub: user._id, username: user.username };
+    const payload = { email: userDB.email, sub: userDB._id.toString(), roles: userDB.roles };
     return {
       access_token: this.jwtService.sign(payload),
     };
+
   }
 
-  async signInEmail(email: string): Promise<{ access_token: string }> {
-    const user = await this.userModel.findOne({ email });
 
-    if (!user?.email) {
-      throw new UnauthorizedException();
-    }
-
-    const payload = { sub: user._id, username: user.email };
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
-  }
-
-/*
-  async validateGoogleUser(googleId: string, email: string, firstName: string, lastName: string, picture: string): Promise<{ access_token: string }> {
-    let user = await this.userModel.findOne({ googleId });
-
-    if (!user) {
-      user = new this.userModel({
-        googleId,
-        email,
-        firstName,
-        lastName,
-        picture
-      });
-      await user.save();
-    }
-
-    const payload = { sub: user._id, username: user.email };
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
-  }
-  */
 }
