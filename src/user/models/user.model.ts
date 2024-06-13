@@ -9,4 +9,5 @@ export class User {
   lastName?: string;
   picture?: string;
   roles: Role[]; // Add roles field
+  vendorID?: string;
 }

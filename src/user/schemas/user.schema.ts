@@ -10,6 +10,7 @@ export const UserSchema = new Schema({
   lastName: { type: String },
   picture: { type: String },
   roles: { type: [String], enum: Role, default: [Role.User] }, // Add roles field
+  vendorID: { type: String },
 }, {
   collection: 'users',
   versionKey: false

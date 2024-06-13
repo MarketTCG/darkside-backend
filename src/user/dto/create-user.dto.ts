@@ -32,4 +32,9 @@ export class CreateUserDto {
   @IsArray()
   @ArrayNotEmpty()
   roles?: Role[];
+
+  @IsOptional()
+  @IsString()
+  vendorID?: string;
+
 }
