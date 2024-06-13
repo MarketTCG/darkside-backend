@@ -14,10 +14,4 @@ export class UtilController {
     return this.utilService.performUtilityOperation();
   }
 
-  @Get('perform-operation')
-  @ApiOperation({ summary: 'Perform a utility operation' })
-  @ApiResponse({ status: 200, description: 'Utility operation performed successfully' })
-  async performUtilityOperation(): Promise<any> {
-    return this.utilService.performUtilityOperation();
-  }
 }
