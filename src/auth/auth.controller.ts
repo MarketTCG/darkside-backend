@@ -30,7 +30,7 @@ export class AuthController {
   @ApiResponse({ status: 302, description: 'Handles Google OAuth callback and redirects with JWT token' })
   async googleAuthRedirect(@Req() req, @Res() res: Response) {
     const jwt = await this.authService.oAuthLogin(req.user);
-    res.redirect(`http://localhost:${process.env.PORT}/oauth?token=${jwt.access_token}`);
+    res.redirect(`${process.env.FRONTEND_REDIRECT}/oauth?token=${jwt.access_token}`);
   }
 
   @Get('user')
