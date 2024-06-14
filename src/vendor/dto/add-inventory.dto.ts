@@ -15,6 +15,10 @@ class InventoryItemDto {
     @ApiProperty({ example: 100, description: 'The price of the product' })
     @IsNumber()
     Price: number;
+
+    @ApiProperty({ example: 100, description: 'The quantity of the product' })
+    @IsNumber()
+    Quantity: number;
 }
 
 export class AddInventoryDto {

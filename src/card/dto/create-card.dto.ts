@@ -14,4 +14,6 @@ export class CreateCardDto {
   @ApiProperty({ example: 100, description: 'The price of the product' })
   @IsNumber()
   Price: number;
+
+  
 }
