@@ -38,14 +38,39 @@ export class VendorController {
     return this.vendorService.findAll();
   }
 
-  @Post(':id/inventory')
+  @Post(':vendorId/inventory')
   @ApiOperation({ summary: 'Add inventory items to vendor' })
-  @ApiBody({ type: CreateCardDto, description: 'Card to add' })
+  @ApiBody({ type: AddInventoryDto, description: 'Card to add' })
   @ApiResponse({ status: 201, description: 'Item pushed to vendor' })
   async addInventoryItems(
-    @Param('id') vendorId: string,
-    @Body() createCardDto: CreateCardDto
+    @Param('vendorId') vendorId: string,
+    @Body() addInventoryDto: AddInventoryDto
   ) {
-    return this.vendorService.addInventoryItems(vendorId, createCardDto);
+    return this.vendorService.addInventoryItems(vendorId, addInventoryDto);
   }
+
+  @Get(':vendorId/inventory')
+  @ApiOperation({ summary: 'Get inventory items for vendor' })
+  @ApiParam({ name: 'vendorId', required: true, description: 'The ID of the vendor' })
+  @ApiResponse({ status: 200, description: 'Inventory items retrieved successfully' })
+  @ApiResponse({ status: 404, description: 'Vendor not found' })
+  async getVendorInventory(
+    @Param('vendorId') vendorId: string
+  ) {
+    return this.vendorService.getVendorInventory(vendorId);
+  }
+
+  @Get(':vendorId/inventory/items')
+  @ApiOperation({ summary: 'Get inventory items by IDs' })
+  @ApiParam({ name: 'vendorId', required: true, description: 'The ID of the vendor' })
+  @ApiQuery({ name: 'itemIds', required: true, description: 'Array of inventory item IDs', type: [String] })
+  @ApiResponse({ status: 200, description: 'Inventory items retrieved successfully' })
+  @ApiResponse({ status: 404, description: 'No inventory items found with the provided IDs' })
+  async getInventoryItemsByIds(
+    @Param('vendorId') vendorId: string,
+    @Query('itemIds') itemIds: string[]
+  ) {
+    return this.vendorService.getInventoryItemsByIds(vendorId, itemIds);
+  }
+
 }

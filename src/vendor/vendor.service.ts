@@ -34,19 +34,43 @@ export class VendorService {
         // Handle the error, e.g., by throwing a custom exception
         throw new BadRequestException('Invalid ID format');
     }
-}
-
-async addInventoryItems(vendorId: string, createCardDto: CreateCardDto) {
-  const updatedVendor = await this.vendorModel.findByIdAndUpdate(
-    vendorId,
-    { $push: { Inventory: createCardDto } },
-    { new: true }
-  );
-
-  if (!updatedVendor) {
-    throw new NotFoundException('Vendor not found');
   }
 
-  return updatedVendor;
-}
+  async addInventoryItems(vendorId: string, addInventoryDto: AddInventoryDto) {
+    const { items } = addInventoryDto;
+    const updatedVendor = await this.vendorModel.findByIdAndUpdate(
+      vendorId,
+      { $push: { Inventory: items } },
+      { new: true }
+    );
+
+    if (!updatedVendor) {
+      throw new NotFoundException('Vendor not found');
+    }
+
+    return updatedVendor;
+  }
+
+  async getVendorInventory(vendorId: string) {
+    const vendor = await this.vendorModel.findById(vendorId).exec();
+    if (!vendor) {
+      throw new NotFoundException('Vendor not found');
+    }
+    return vendor.Inventory;
+  }
+
+  async getInventoryItemsByIds(vendorId: string, itemIds: string[]) {
+    const vendor = await this.vendorModel.findById(vendorId).exec();
+    if (!vendor) {
+      throw new NotFoundException('Vendor not found');
+    }
+
+    const inventoryItems = vendor.Inventory.filter(item => itemIds.includes(item._id.toString()));
+    if (inventoryItems.length === 0) {
+      throw new NotFoundException('No inventory items found with the provided IDs');
+    }
+
+    return inventoryItems;
+  }
+
 }

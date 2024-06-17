@@ -4,6 +4,10 @@ import { IsString, IsNumber, IsArray, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 
 class InventoryItemDto {
+  @ApiProperty({ example: '666fccac8a495eba3b996d8f', description: 'The ID of the inventory item' })
+  @IsString()
+  _id: string;
+
   @ApiProperty({ example: '665d2c498805000ce934043d', description: 'The ID of the inventory item' })
   @IsString()
   VendorID: string;
@@ -15,6 +19,14 @@ class InventoryItemDto {
   @ApiProperty({ example: 100, description: 'The price of the product' })
   @IsNumber()
   Price: number;
+
+  @ApiProperty({ example: 5, description: 'The quantity of the product' })
+  @IsNumber()
+  Quantity: number;
+
+  @ApiProperty({ example: "NM", description: 'The quality of the product' })
+  @IsNumber()
+  Quality: string;
 }
 
 export class VendorDto {
