@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Query, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query, Param, Delete } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponseMetadata, ApiQuery, ApiResponse, ApiBody, ApiParam } from '@nestjs/swagger';
 import { VendorService } from './vendor.service';
 import { VendorDto } from './dto/vendor.dto';
@@ -6,6 +6,7 @@ import { AddInventoryDto } from './dto/add-inventory.dto'
 import { CreateVendorDto } from './dto/create-vendor.dto';
 import { CreateCardDto } from 'src/card/dto/create-card.dto';
 import { Vendor } from './models/vendor.model';
+import { RemoveInventoryDto } from './dto/remove-inventory.dto';
 
 @ApiTags('vendors')
 @Controller('vendors')
@@ -71,6 +72,18 @@ export class VendorController {
     @Query('itemIds') itemIds: string[]
   ) {
     return this.vendorService.getInventoryItemsByIds(vendorId, itemIds);
+  }
+
+  @Delete(':vendorId/inventory')
+  @ApiOperation({ summary: 'Remove inventory items from vendor' })
+  @ApiBody({ type: RemoveInventoryDto, description: 'Array of inventory item IDs to remove' })
+  @ApiResponse({ status: 200, description: 'Items removed from vendor' })
+  @ApiResponse({ status: 404, description: 'Vendor not found' })
+  async removeInventoryItems(
+    @Param('vendorId') vendorId: string,
+    @Body() removeInventoryDto: RemoveInventoryDto
+  ) {
+    return this.vendorService.removeInventoryItems(vendorId, removeInventoryDto);
   }
 
 }

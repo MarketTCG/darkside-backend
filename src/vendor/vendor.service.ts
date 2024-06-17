@@ -2,11 +2,9 @@ import { Injectable, BadRequestException, NotFoundException } from '@nestjs/comm
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Vendor } from './models/vendor.model';
-import { VendorDto } from './dto/vendor.dto';
 import { AddInventoryDto } from './dto/add-inventory.dto'
-import { CreateVendorDto } from './dto/create-vendor.dto';
-import { CreateCardDto } from 'src/card/dto/create-card.dto';
 import { Types } from 'mongoose';
+import { RemoveInventoryDto } from './dto/remove-inventory.dto';
 
 @Injectable()
 export class VendorService {
@@ -71,6 +69,21 @@ export class VendorService {
     }
 
     return inventoryItems;
+  }
+
+  async removeInventoryItems(vendorId: string, removeInventoryDto: RemoveInventoryDto) {
+    const { itemIds } = removeInventoryDto;
+    const updatedVendor = await this.vendorModel.findByIdAndUpdate(
+      vendorId,
+      { $pull: { Inventory: { _id: { $in: itemIds } } } },
+      { new: true }
+    );
+
+    if (!updatedVendor) {
+      throw new NotFoundException('Vendor not found');
+    }
+
+    return updatedVendor;
   }
 
 }
