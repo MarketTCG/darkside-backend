@@ -5,6 +5,8 @@ import { Vendor } from './models/vendor.model';
 import { AddInventoryDto } from './dto/add-inventory.dto'
 import { Types } from 'mongoose';
 import { RemoveInventoryDto } from './dto/remove-inventory.dto';
+import { UpdatePriceDto } from './dto/update-price.dto';
+import { UpdateQuantityDto } from './dto/update-quantity.dto';
 
 @Injectable()
 export class VendorService {
@@ -81,6 +83,38 @@ export class VendorService {
 
     if (!updatedVendor) {
       throw new NotFoundException('Vendor not found');
+    }
+
+    return updatedVendor;
+  }
+
+  async updateInventoryItemPrice(vendorId: string, updatePriceDto: UpdatePriceDto) {
+    const { _id, Price } = updatePriceDto;
+
+    const updatedVendor = await this.vendorModel.findOneAndUpdate(
+      { _id: vendorId, 'Inventory._id': _id },
+      { $set: { 'Inventory.$.Price': Price } },
+      { new: true }
+    );
+
+    if (!updatedVendor) {
+      throw new NotFoundException('Vendor or inventory item not found');
+    }
+
+    return updatedVendor;
+  }
+
+  async updateInventoryItemQuantity(vendorId: string, updateQuantityDto: UpdateQuantityDto) {
+    const { _id, Quantity } = updateQuantityDto;
+    console.log(updateQuantityDto)
+    const updatedVendor = await this.vendorModel.findOneAndUpdate(
+      { _id: vendorId, 'Inventory._id': _id },
+      { $set: { 'Inventory.$.Quantity': Quantity } },
+      { new: true }
+    );
+
+    if (!updatedVendor) {
+      throw new NotFoundException('Vendor or inventory item not found');
     }
 
     return updatedVendor;

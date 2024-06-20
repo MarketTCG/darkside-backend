@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Query, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query, Param, Delete, Patch } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponseMetadata, ApiQuery, ApiResponse, ApiBody, ApiParam } from '@nestjs/swagger';
 import { VendorService } from './vendor.service';
 import { VendorDto } from './dto/vendor.dto';
@@ -7,6 +7,8 @@ import { CreateVendorDto } from './dto/create-vendor.dto';
 import { CreateCardDto } from 'src/card/dto/create-card.dto';
 import { Vendor } from './models/vendor.model';
 import { RemoveInventoryDto } from './dto/remove-inventory.dto';
+import { UpdatePriceDto } from './dto/update-price.dto';
+import { UpdateQuantityDto } from './dto/update-quantity.dto';
 
 @ApiTags('vendors')
 @Controller('vendors')
@@ -84,6 +86,36 @@ export class VendorController {
     @Body() removeInventoryDto: RemoveInventoryDto
   ) {
     return this.vendorService.removeInventoryItems(vendorId, removeInventoryDto);
+  }
+
+  @Patch(':vendorId/inventory/:itemId/price')
+  @ApiOperation({ summary: 'Update inventory item price' })
+  @ApiParam({ name: 'vendorId', required: true, description: 'The ID of the vendor' })
+  @ApiParam({ name: 'itemId', required: true, description: 'The ID of the inventory item' })
+  @ApiBody({ type: UpdatePriceDto, description: 'New price of the inventory item' })
+  @ApiResponse({ status: 200, description: 'Inventory item price updated successfully' })
+  @ApiResponse({ status: 404, description: 'Vendor or inventory item not found' })
+  async updateInventoryItemPrice(
+    @Param('vendorId') vendorId: string,
+    @Param('itemId') itemId: string,
+    @Body() updatePriceDto: UpdatePriceDto
+  ) {
+    return this.vendorService.updateInventoryItemPrice(vendorId, { ...updatePriceDto, _id: itemId });
+  }
+
+  @Patch(':vendorId/inventory/:itemId/quantity')
+  @ApiOperation({ summary: 'Update inventory item quantity' })
+  @ApiParam({ name: 'vendorId', required: true, description: 'The ID of the vendor' })
+  @ApiParam({ name: 'itemId', required: true, description: 'The ID of the inventory item' })
+  @ApiBody({ type: UpdateQuantityDto, description: 'New quantity of the inventory item' })
+  @ApiResponse({ status: 200, description: 'Inventory item quantity updated successfully' })
+  @ApiResponse({ status: 404, description: 'Vendor or inventory item not found' })
+  async updateInventoryItemQuantity(
+    @Param('vendorId') vendorId: string,
+    @Param('itemId') itemId: string,
+    @Body() updateQuantityDto: UpdateQuantityDto
+  ) {
+    return this.vendorService.updateInventoryItemQuantity(vendorId, { ...updateQuantityDto, _id: itemId });
   }
 
 }

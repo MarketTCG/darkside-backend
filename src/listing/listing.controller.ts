@@ -67,6 +67,7 @@ export class ListingController {
     );
   }
 
+
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a listing' })
   @ApiParam({ name: 'id', required: true, description: 'The ID of the listing' })
