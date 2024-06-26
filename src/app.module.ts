@@ -12,7 +12,6 @@ import { HostnameModule } from './hostname/hostname.module';
 import { AuthModule } from './auth/auth.module';
 import { VendorModule } from './vendor/vendor.module';
 import { UtilModule } from './utils/util.module';
-import { CardModule } from './card/card.module';
 
 @Module({
   imports: [
@@ -29,7 +28,6 @@ import { CardModule } from './card/card.module';
     AuthModule,
     VendorModule,
     UtilModule,
-    CardModule
   ],
   controllers: [AppController],
   providers: [AppService],

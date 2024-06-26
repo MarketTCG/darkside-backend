@@ -16,7 +16,7 @@ export class ListingItem {
   Price: number;
   Quantity: number;
   Quality: string;
-  ListingId:
+  ListingId: string;
 }
 
 export class Vendor extends Document {

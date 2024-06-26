@@ -1,17 +1,19 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ListingController } from './listing.controller';
-import { ListingService } from './listing.service';
+import { ListingsService } from './listing.service';
 import ListingSchema  from './schemas/listing.schema'
 import ProductSchema from 'src/product/schemas/product.schema';
+import VendorSchema from 'src/vendor/schemas/vendor.schema';
 
 @Module({
   imports: 
   [
     MongooseModule.forFeature([{ name: 'Listing', schema: ListingSchema }]),
+    MongooseModule.forFeature([{ name: 'Vendor', schema: VendorSchema }]),
     MongooseModule.forFeature([{ name: 'Product', schema: ProductSchema }])
   ],
   controllers: [ListingController],
-  providers: [ListingService],
+  providers: [ListingsService],
 })
 export class ListingModule {}

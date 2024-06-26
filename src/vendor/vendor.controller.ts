@@ -3,8 +3,6 @@ import { ApiTags, ApiOperation, ApiResponseMetadata, ApiQuery, ApiResponse, ApiB
 import { VendorService } from './vendor.service';
 import { VendorDto } from './dto/vendor.dto';
 import { AddInventoryDto } from './dto/add-inventory.dto'
-import { CreateVendorDto } from './dto/create-vendor.dto';
-import { CreateCardDto } from 'src/card/dto/create-card.dto';
 import { Vendor } from './models/vendor.model';
 import { RemoveInventoryDto } from './dto/remove-inventory.dto';
 import { UpdatePriceDto } from './dto/update-price.dto';

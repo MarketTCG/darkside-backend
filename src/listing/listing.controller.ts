@@ -1,29 +1,45 @@
-import { Controller, Get, Query, Put, Body, Param, Post, Delete } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiQuery, ApiBody } from '@nestjs/swagger';
-import { ListingService } from './listing.service';
-import { Listing } from './models/listing.model';
-import { CreateListingDto } from './dto/create-listing.dto';
-import { ListingDto } from "./dto/listing.dto"
+// src/listings/listings.controller.ts
+import { Controller, Patch, Delete, Get, Body, Param } from '@nestjs/common';
+import { ApiBody, ApiResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import { ListingsService } from './listing.service';
+import { UpdateQuantityDto } from './dto/update-quantity.dto';
+import { UpdatePriceDto } from './dto/update-price.dto';
 
-@ApiTags('listing')
-@Controller('listing')
+@ApiTags('listings')
+@Controller('listings')
 export class ListingController {
-  constructor(private readonly listingService: ListingService) {}
+  constructor(private readonly listingsService: ListingsService) {}
 
-  @Get()
-  @ApiOperation({ summary: 'Get all listings' })
-  @ApiResponse({ status: 200, description: 'Successful retrieval', type: [Listing] })
-  async findAll(): Promise<Listing[]> {
-    return this.listingService.findAll();
+  @Patch('update-quantity')
+  @ApiOperation({ summary: 'Update quantity of a listing' })
+  @ApiBody({ type: UpdateQuantityDto, description: 'Listing ID and new quantity' })
+  @ApiResponse({ status: 200, description: 'Quantity updated successfully' })
+  async updateQuantity(@Body() updateQuantityDto: UpdateQuantityDto) {
+    return this.listingsService.updateQuantity(updateQuantityDto);
   }
 
-  @Get('listingId')
-  @ApiOperation({ summary: 'Get listing by listingId' })
-  @ApiQuery({ name: 'id', required: true, description: 'The ID of the listing' })
-  @ApiResponse({ status: 200, description: 'Successful retrieval', type: Listing })
-  async findById(@Query('id') id: string): Promise<Listing> {
-    return this.listingService.findById(id);
+  @Patch('update-price')
+  @ApiOperation({ summary: 'Update price of a listing' })
+  @ApiBody({ type: UpdatePriceDto, description: 'Listing ID and new price' })
+  @ApiResponse({ status: 200, description: 'Price updated successfully' })
+  async updatePrice(@Body() updatePriceDto: UpdatePriceDto) {
+    return this.listingsService.updatePrice(updatePriceDto);
   }
 
+  @Delete(':listingId')
+  @ApiOperation({ summary: 'Delete a listing' })
+  @ApiParam({ name: 'listingId', required: true, description: 'The ID of the listing' })
+  @ApiResponse({ status: 200, description: 'Listing deleted successfully' })
+  async deleteListing(@Param('listingId') listingId: string) {
+    return this.listingsService.deleteListing(listingId);
+  }
 
+  @Get(':listingId')
+  @ApiOperation({ summary: 'Find a listing by ListingID' })
+  @ApiParam({ name: 'listingId', required: true, description: 'The ID of the listing' })
+  @ApiResponse({ status: 200, description: 'Listing found successfully' })
+  @ApiResponse({ status: 404, description: 'Listing not found' })
+  async findByListingId(@Param('listingId') listingId: string) {
+    return this.listingsService.findByListingId(listingId);
+  }
 }
