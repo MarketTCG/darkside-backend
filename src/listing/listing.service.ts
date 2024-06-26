@@ -19,86 +19,14 @@ export class ListingService {
 
   async findById(id: string): Promise<Listing> {
     try {
-        const objectId = new Types.ObjectId(id);
-        console.log("searching for", objectId)
-        return this.listingModel.findById(objectId).exec();
+        console.log("searching for", id)
+        return this.listingModel.findById(id).exec();
     } catch (error) {
         // Handle the error, e.g., by throwing a custom exception
         throw new BadRequestException('Invalid ID format');
     }
 }
 
-async addCardsToListingAndProduct(
-  listingId: string,
-  productId: string,
-  cards: { CardId: string; Price: number }[]
-) {
-
-  console.log('Updating listing with ID:', listingId);
-  console.log('Cards to add:', cards);
-
-  try {
-
-    await this.productModel.updateOne(
-      { _id: productId },
-      { $push: { Listing: { $each: cards } } }
-    ).exec()
-
-    return await this.listingModel.updateOne(
-      { _id: listingId },
-      { $push: { Listed: { $each: cards } } }
-    ).exec();
-  } catch (error) {
-    console.error('Error updating listing:', error);
-    throw new Error('Failed to update listing');
-  }
-}
-
-
-async removeCardsToListingAndProduct(
-  listingId: string,
-  productId: string,
-  id: string
-) {
-
-  console.log('Updating listing with ID:', listingId);
-  console.log('Cards to add:', id);
-
-  try {
-
-    await this.productModel.updateOne(
-      { _id: productId },
-      { $pull: { Listing: { _id: id } } }
-    ).exec()
-
-    return await this.listingModel.updateOne(
-      { _id: listingId },
-      { $pull: { Listed: { _id: id } } }
-    ).exec();
-  } catch (error) {
-    console.error('Error updating listing:', error);
-    throw new Error('Failed to update listing');
-  }
-}
-
-async deleteListing(id: string) {
-  return this.listingModel.deleteOne({ _id: id }).exec();
-}
-
-async createListing(
-  VendorId: string,
-  Total: number,
-  Sold: string[],
-  ListingDetails: { NM: string[]; LP: string[]; MP: string[]; HP: string[]; D: string[] }
-) {
-  const newListing = new this.listingModel({
-    VendorId,
-    Total,
-    Sold,
-    Listing: ListingDetails
-  });
-  return newListing.save();
-}
 
 
 }

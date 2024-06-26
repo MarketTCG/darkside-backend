@@ -10,8 +10,18 @@ export class InventoryItem {
   Quality: string;
 }
 
+export class ListingItem {
+  VendorID: string;
+  ProductID: string;
+  Price: number;
+  Quantity: number;
+  Quality: string;
+  ListingId:
+}
+
 export class Vendor extends Document {
   UserID: string;
   Inventory: InventoryItem[];
   VendorRating: number;
+  Listings: ListingItem[];
 }

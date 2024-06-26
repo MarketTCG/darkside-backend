@@ -30,7 +30,7 @@ class ListingDetailsDto {
   D: string[];
 }
 
-export class ListingDto {
+export class CreateListingDto {
   @ApiProperty({ example: '6641911de3052da3252bcdcd', description: 'The ID of the listing' })
   @IsString()
   _id: string;

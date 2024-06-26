@@ -1,8 +1,9 @@
-import { Controller, Get, Query, Post, Body } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger';
+import { Controller, Get, Query, Post, Body, Put, Param } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiQuery, ApiBody, ApiParam } from '@nestjs/swagger';
 import { ProductService } from './product.service';
 import { Product } from './models/product.model';
 import { ProductDto } from './dto/product.dto';
+import { AddCardsDto } from './dto/add-cards.dto';
 
 @ApiTags('product')
 @Controller('product')
@@ -24,12 +25,15 @@ export class ProductController {
     return this.productService.findById(id);
   }
 
-  /*
-  @Post()
-  @ApiOperation({ summary: 'Create a new product' })
-  @ApiResponse({ status: 201, description: 'Product created successfully', type: ProductDto })
-  async create(@Body() createProductDto: ProductDto): Promise<Product> {
-    return this.productService.create(createProductDto);
+  @Put(':vendorId/add-cards')
+  @ApiOperation({ summary: 'Add cards to multiple products' })
+  @ApiParam({ name: 'vendorId', required: true, description: 'The ID of the vendor' })
+  @ApiBody({ type: AddCardsDto, description: 'Product IDs with their respective cards to add' })
+  @ApiResponse({ status: 200, description: 'Cards added successfully' })
+  async addCardsToProducts(
+    @Param('vendorId') vendorId: string,
+    @Body() addCardsDto: AddCardsDto,
+  ) {
+    return this.productService.addCardsToProducts(vendorId, addCardsDto);
   }
-  */
 }

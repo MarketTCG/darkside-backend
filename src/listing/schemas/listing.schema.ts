@@ -1,20 +1,24 @@
-// src/product/schemas/listing.schema.ts
 import { Schema } from 'mongoose';
 
-const ListingDetailsSchema = new Schema({
-  NM: { type: [String], default: [] },
-  LP: { type: [String], default: [] },
-  MP: { type: [String], default: [] },
-  HP: { type: [String], default: [] },
-  D: { type: [String], default: [] },
+const ListingItemSchema = new Schema({
+  VendorId: { type: String, required: true },
+  Quantity: { type: Number, required: true },
+  Price: { type: Number, required: true },
 });
 
-export const ListingSchema = new Schema({
-  _id: { type: String, required: true },
+const ListingQualitySchema = new Schema({
+  NM: { type: [ListingItemSchema], default: [] },
+  LP: { type: [ListingItemSchema], default: [] },
+  MP: { type: [ListingItemSchema], default: [] },
+  HP: { type: [ListingItemSchema], default: [] },
+  D: { type: [ListingItemSchema], default: [] },
+});
+
+const ListingSchema = new Schema({
   VendorId: { type: String, required: true },
-  Total: { type: Number, required: true },
+  Total: { type: Number, default: 0 },
   Sold: { type: [String], default: [] },
-  Listing: { type: ListingDetailsSchema, required: true },
-}, { collection: 'listings' });
+  Listing: { type: ListingQualitySchema, default: () => ({}) },
+}, { collection: 'Listings' });
 
 export default ListingSchema;

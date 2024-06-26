@@ -2,15 +2,19 @@ import { Injectable, BadRequestException, NotFoundException } from '@nestjs/comm
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Vendor } from './models/vendor.model';
+import { Product } from '../product/models/product.model';
 import { AddInventoryDto } from './dto/add-inventory.dto'
 import { Types } from 'mongoose';
 import { RemoveInventoryDto } from './dto/remove-inventory.dto';
 import { UpdatePriceDto } from './dto/update-price.dto';
 import { UpdateQuantityDto } from './dto/update-quantity.dto';
+import { AddCardsDto } from './dto/add-cards.dto';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class VendorService {
-  constructor(@InjectModel('Vendor') private readonly vendorModel: Model<Vendor>) {}
+  constructor(@InjectModel('Vendor') private readonly vendorModel: Model<Vendor>,
+  @InjectModel('Product') private readonly productModel: Model<Product>) {}
 
   async createVendor(userId: string) {
     const newVendor = new this.vendorModel({
@@ -118,6 +122,70 @@ export class VendorService {
     }
 
     return updatedVendor;
+  }
+
+  async addCardsToProductsAndVendorListings(vendorId: string, addCardsDto: AddCardsDto) {
+    const { products } = addCardsDto;
+
+    console.log('Updating products and vendor listings with IDs and their respective cards:', products);
+
+    try {
+      // Loop through each product and update the product model and vendor listings
+      for (const product of products) {
+        const { productId, cards } = product;
+
+        // Group cards by quality for product update
+        const groupedCards: { [key: string]: { VendorId: string; Quantity: number; Price: number; ListingId: string }[] } = {};
+        const listingsToAdd = [];
+
+        cards.forEach(card => {
+          const listingId = uuidv4(); // Generate a unique identifier for each card entry
+
+          if (!groupedCards[card.Quality]) {
+            groupedCards[card.Quality] = [];
+          }
+          groupedCards[card.Quality].push({
+            VendorId: vendorId,
+            Quantity: card.Quantity,
+            Price: card.Price,
+            ListingId: listingId,
+          });
+
+          listingsToAdd.push({
+            VendorID: vendorId,
+            ProductID: productId,
+            Price: card.Price,
+            Quantity: card.Quantity,
+            Quality: card.Quality,
+            ListingId: listingId,
+          });
+        });
+
+        const updateObject: { [key: string]: any } = {};
+        for (const quality in groupedCards) {
+          if (groupedCards.hasOwnProperty(quality)) {
+            updateObject[`Listing.${quality}`] = { $each: groupedCards[quality] };
+          }
+        }
+
+        // Update the product model
+        await this.productModel.updateOne(
+          { _id: productId },
+          { $push: updateObject }
+        ).exec();
+
+        // Update the vendor document
+        await this.vendorModel.updateOne(
+          { _id: vendorId },
+          { $push: { Listings: { $each: listingsToAdd } } }
+        ).exec();
+      }
+
+      return { message: 'Cards added successfully to all specified products and vendor listings' };
+    } catch (error) {
+      console.error('Error updating products and vendor listings:', error);
+      throw new Error('Failed to update products and vendor listings');
+    }
   }
 
 }

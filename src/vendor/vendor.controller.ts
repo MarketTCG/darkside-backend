@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Query, Param, Delete, Patch } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query, Param, Delete, Patch, Put } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponseMetadata, ApiQuery, ApiResponse, ApiBody, ApiParam } from '@nestjs/swagger';
 import { VendorService } from './vendor.service';
 import { VendorDto } from './dto/vendor.dto';
@@ -9,6 +9,7 @@ import { Vendor } from './models/vendor.model';
 import { RemoveInventoryDto } from './dto/remove-inventory.dto';
 import { UpdatePriceDto } from './dto/update-price.dto';
 import { UpdateQuantityDto } from './dto/update-quantity.dto';
+import { AddCardsDto } from './dto/add-cards.dto';
 
 @ApiTags('vendors')
 @Controller('vendors')
@@ -116,6 +117,18 @@ export class VendorController {
     @Body() updateQuantityDto: UpdateQuantityDto
   ) {
     return this.vendorService.updateInventoryItemQuantity(vendorId, { ...updateQuantityDto, _id: itemId });
+  }
+
+  @Put(':vendorId/add-cards')
+  @ApiOperation({ summary: 'Add cards to products and vendor listings' })
+  @ApiParam({ name: 'vendorId', required: true, description: 'The ID of the vendor' })
+  @ApiBody({ type: AddCardsDto, description: 'Product IDs with their respective cards to add' })
+  @ApiResponse({ status: 200, description: 'Cards added successfully' })
+  async addCardsToProductsAndVendorListings(
+    @Param('vendorId') vendorId: string,
+    @Body() addCardsDto: AddCardsDto,
+  ) {
+    return this.vendorService.addCardsToProductsAndVendorListings(vendorId, addCardsDto);
   }
 
 }
