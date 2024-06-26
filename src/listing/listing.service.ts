@@ -1,18 +1,21 @@
 // src/listings/listings.service.ts
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Vendor } from '../vendor/models/vendor.model';
 import { Product } from '../product/models/product.model';
 import { UpdateQuantityDto } from './dto/update-quantity.dto';
 import { UpdatePriceDto } from './dto/update-price.dto';
+import { PurchaseItemDto } from './dto/purchase-item.dto';
+import { Order } from 'src/order/models/order.model';
 
 @Injectable()
 export class ListingsService {
 
   constructor(
     @InjectModel('Vendor') private readonly vendorModel: Model<Vendor>,
-    @InjectModel('Product') private readonly productModel: Model<Product>
+    @InjectModel('Product') private readonly productModel: Model<Product>,
+    @InjectModel('Order') private readonly orderModel: Model<Order>
   ) {}
 
   async updateQuantity(updateQuantityDto: UpdateQuantityDto) {
@@ -154,5 +157,59 @@ export class ListingsService {
       vendorListing: vendorListing.Listings[0],
       productListing: productListing.Listing[quality][0],
     };
+  }
+
+  async purchaseItem(purchaseItemDto: PurchaseItemDto) {
+    const { listingId, userId } = purchaseItemDto;
+
+    // Find the listing in vendor inventory to get the quality
+    const vendorListing = await this.vendorModel.findOne(
+      { 'Listings.ListingId': listingId },
+      { 'Listings.$': 1 }
+    ).exec();
+
+    if (!vendorListing) {
+      throw new NotFoundException(`Listing with ID ${listingId} not found in vendor inventory`);
+    }
+
+    const quality = vendorListing.Listings[0].Quality;
+    const currentQuantity = vendorListing.Listings[0].Quantity;
+
+    if (currentQuantity <= 0) {
+      throw new BadRequestException(`Listing with ID ${listingId} is out of stock`);
+    }
+
+    // Reduce quantity in vendor inventory
+    const vendorUpdateResult = await this.vendorModel.updateOne(
+      { 'Listings.ListingId': listingId },
+      { $inc: { 'Listings.$.Quantity': -1 } }
+    ).exec();
+
+    if (vendorUpdateResult.modifiedCount === 0) {
+      throw new NotFoundException(`Listing with ID ${listingId} not found in vendor inventory`);
+    }
+
+    // Reduce quantity in product listing
+    const productUpdateResult = await this.productModel.updateOne(
+      { [`Listing.${quality}.ListingId`]: listingId },
+      { $inc: { [`Listing.${quality}.$.Quantity`]: -1 } }
+    ).exec();
+
+    if (productUpdateResult.modifiedCount === 0) {
+      throw new NotFoundException(`Listing with ID ${listingId} not found in product listing`);
+    }
+
+    // Create an order
+    const order = new this.orderModel({
+      userId,
+      listingId,
+      quantity: 1,
+      status: 'Purchased',
+      purchaseDate: new Date(),
+    });
+
+    await order.save();
+
+    return { message: 'Item purchased and order created successfully' };
   }
 }

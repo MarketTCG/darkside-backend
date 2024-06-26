@@ -11,6 +11,8 @@ export const UserSchema = new Schema({
   picture: { type: String },
   roles: { type: [String], enum: Role, default: [Role.User] }, // Add roles field
   vendorID: { type: String },
+  orders: { type: [String] },
+  orderHistory: { type: [String] },
 }, {
   collection: 'users',
   versionKey: false

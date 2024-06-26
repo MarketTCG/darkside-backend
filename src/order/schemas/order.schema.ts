@@ -1,11 +1,13 @@
+// src/order/schemas/order.schema.ts
 import { Schema } from 'mongoose';
 
-export const OrderSchema = new Schema({
-  OrderDate: String
-}, {collection:'orders',
-  versionKey: false
-})
+const OrderSchema = new Schema({
+  userId: { type: String, required: true },
+  vendorId: { type: String, required: true },
+  productId: { type: String, required: true },
+  quantity: { type: Number, required: true },
+  status: { type: String, required: true },
+  purchaseDate: { type: Date, required: true },
+}, { collection: 'orders' });
 
-
- export default OrderSchema;
- 
+export default OrderSchema;

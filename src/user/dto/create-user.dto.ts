@@ -37,4 +37,12 @@ export class CreateUserDto {
   @IsString()
   vendorID?: string;
 
+
+  @IsArray()
+  orders: string[];
+
+  @IsArray()
+  orderHistory: string[];
+
+
 }

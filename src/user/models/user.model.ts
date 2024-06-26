@@ -10,4 +10,6 @@ export class User {
   picture?: string;
   roles: Role[]; // Add roles field
   vendorID?: string;
+  orders: string[];
+  orderHistory: string[];
 }
