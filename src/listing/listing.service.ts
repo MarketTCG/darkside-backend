@@ -7,6 +7,7 @@ import { Product } from '../product/models/product.model';
 import { UpdateQuantityDto } from './dto/update-quantity.dto';
 import { UpdatePriceDto } from './dto/update-price.dto';
 import { PurchaseItemDto } from './dto/purchase-item.dto';
+import { StripeService } from '../stripe/stripe.service';
 import { Order } from 'src/order/models/order.model';
 
 @Injectable()
@@ -15,7 +16,8 @@ export class ListingsService {
   constructor(
     @InjectModel('Vendor') private readonly vendorModel: Model<Vendor>,
     @InjectModel('Product') private readonly productModel: Model<Product>,
-    @InjectModel('Order') private readonly orderModel: Model<Order>
+    @InjectModel('Order') private readonly orderModel: Model<Order>,
+    private readonly stripeService: StripeService
   ) {}
 
   async updateQuantity(updateQuantityDto: UpdateQuantityDto) {
@@ -160,9 +162,9 @@ export class ListingsService {
   }
 
   async purchaseItem(purchaseItemDto: PurchaseItemDto) {
-    const { listingId, userId } = purchaseItemDto;
+    const { listingId, userId, amount, currency } = purchaseItemDto;
 
-    // Find the listing in vendor inventory to get the quality
+    // Find the listing in vendor inventory to get the quality and vendorId
     const vendorListing = await this.vendorModel.findOne(
       { 'Listings.ListingId': listingId },
       { 'Listings.$': 1 }
@@ -174,10 +176,26 @@ export class ListingsService {
 
     const quality = vendorListing.Listings[0].Quality;
     const currentQuantity = vendorListing.Listings[0].Quantity;
+    const vendorId = vendorListing._id.toString(); // Ensure vendorId is a string
 
     if (currentQuantity <= 0) {
       throw new BadRequestException(`Listing with ID ${listingId} is out of stock`);
     }
+
+    // Find the productId from the product listing
+    const productListing = await this.productModel.findOne(
+      { [`Listing.${quality}.ListingId`]: listingId },
+      { _id: 1 }
+    ).exec();
+
+    if (!productListing) {
+      throw new NotFoundException(`Listing with ID ${listingId} not found in product listing`);
+    }
+
+    const productId = productListing._id.toString(); // Ensure productId is a string
+
+    // Create a payment intent
+    const paymentIntent = await this.stripeService.createPaymentIntent(amount, currency);
 
     // Reduce quantity in vendor inventory
     const vendorUpdateResult = await this.vendorModel.updateOne(
@@ -203,13 +221,16 @@ export class ListingsService {
     const order = new this.orderModel({
       userId,
       listingId,
+      productId,
+      vendorId,
       quantity: 1,
       status: 'Purchased',
       purchaseDate: new Date(),
+      paymentIntentId: paymentIntent.id,
     });
 
     await order.save();
 
-    return { message: 'Item purchased and order created successfully' };
+    return { message: 'Item purchased and order created successfully', paymentIntent };
   }
 }

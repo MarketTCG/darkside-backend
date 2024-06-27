@@ -12,6 +12,7 @@ import { HostnameModule } from './hostname/hostname.module';
 import { AuthModule } from './auth/auth.module';
 import { VendorModule } from './vendor/vendor.module';
 import { UtilModule } from './utils/util.module';
+import { StripeModule } from './stripe/stripe.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { UtilModule } from './utils/util.module';
     AuthModule,
     VendorModule,
     UtilModule,
+    StripeModule,
   ],
   controllers: [AppController],
   providers: [AppService],

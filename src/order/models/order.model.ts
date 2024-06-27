@@ -3,9 +3,11 @@ import { Document } from 'mongoose';
 
 export class Order extends Document {
   userId: string;
-  vendorId: string;
+  listingId: string;
   productId: string;
+  vendorId: string;
   quantity: number;
   status: string;
   purchaseDate: Date;
+  paymentIntentId: string;
 }
