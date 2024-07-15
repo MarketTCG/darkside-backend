@@ -3,11 +3,15 @@ require('dotenv').config();
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { json, urlencoded } from 'express';
+import { Request } from 'express';
 import * as session from 'express-session';
 import * as passport from 'passport';
 
 async function bootstrap() {
-const app = await NestFactory.create(AppModule);
+const app = await NestFactory.create(AppModule, {
+  rawBody: true,
+});
 app.enableCors()
 
 
@@ -26,6 +30,13 @@ app.use(
       secret: process.env.SESSION_SECRET || "your-secret",
       resave: false,
       saveUninitialized: false,
+    }),
+    json({
+      verify: (req: Request, res, buf) => {
+        if (req.originalUrl.startsWith('/stripe/webhook')) {
+          (req as any).rawBody = buf;
+        }
+      }
     }),
   );
 

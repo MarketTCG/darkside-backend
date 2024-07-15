@@ -11,5 +11,4 @@ export class OrderController {
     return this.orderService.findAll();
  }
 
-
 }

@@ -141,6 +141,8 @@ export class VendorService {
         cards.forEach(card => {
           const listingId = uuidv4(); // Generate a unique identifier for each card entry
 
+          
+
           if (!groupedCards[card.Quality]) {
             groupedCards[card.Quality] = [];
           }
