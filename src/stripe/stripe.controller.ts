@@ -28,11 +28,12 @@ export class StripeController {
     const session = await this.stripeService.getCheckoutSession(sessionId);
     return session;
   }
-
+  /*
   @Post('create-payment-intent')
   async createPaymentIntent(@Body() body: { amount: number; currency: string }) {
     return this.stripeService.createPaymentIntent(body.amount, body.currency);
   }
+    */
 
   @Post('create-checkout-session')
   @ApiOperation({ summary: 'Create a Stripe checkout session with inline price data' })
@@ -43,6 +44,7 @@ export class StripeController {
     return { session };
   }
 
+  /** 
   @Post('create-prices')
   @ApiOperation({ summary: 'Create Stripe price objects for each item' })
   @ApiBody({ type: CreatePriceDto })
@@ -60,6 +62,7 @@ export class StripeController {
     const products = await this.stripeService.createProducts(createProductDto.items);
     return { products };
   }
+    
 
   @Post('archive-price')
   @ApiOperation({ summary: 'Archive a Stripe price' })
@@ -70,6 +73,7 @@ export class StripeController {
     const price = await this.stripeService.archivePrice(priceId);
     return { price };
   }
+    */
 
   @Post('webhook')
   async handleWebhook(@Req() req: RawBodyRequest<Request>, @Res() res: Response) {
@@ -86,7 +90,6 @@ export class StripeController {
       return res.status(400).send(`Webhook Error: ${err.message}`);
     }
 
-    // Handle the event
     switch (event.type) {
       case 'payment_intent.succeeded':
         const paymentIntentSucceeded = event.data.object as Stripe.PaymentIntent;
@@ -96,7 +99,7 @@ export class StripeController {
         const paymentMethodAttached = event.data.object as Stripe.PaymentMethod;
         await this.stripeService.handlePaymentMethodAttached(paymentMethodAttached);
         break;
-      // ... handle other event types
+      // need to update other events
       default:
         console.log(`Unhandled event type ${event.type}`);
     }

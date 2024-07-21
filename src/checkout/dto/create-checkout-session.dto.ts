@@ -1,11 +1,16 @@
+// src/checkout/dto/create-checkout-session.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsString, IsNumber, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 
 class ProductItemDto {
-  @ApiProperty({ example: 'The vendor ID', description: 'The id of the vendor' })
+  @ApiProperty({ example: 'vendor_123', description: 'The vendor ID' })
   @IsString()
   vendorId: string;
+
+  @ApiProperty({ example: 'vendor_123', description: 'The vendor ID' })
+  @IsString()
+  userId: string;
 
   @ApiProperty({ example: 'Product Name', description: 'The name of the product' })
   @IsString()

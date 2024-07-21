@@ -2,6 +2,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Stripe from 'stripe';
+import { CreateCheckoutSessionDto } from './dto/create-checkout-session.dto';
 
 @Injectable()
 export class StripeService {
@@ -19,7 +20,7 @@ export class StripeService {
     return this.stripe.checkout.sessions.retrieve(sessionId);
   }
 
-
+  /*
   async createPaymentIntent(amount: number, currency: string): Promise<Stripe.PaymentIntent> {
     return this.stripe.paymentIntents.create({
       amount,
@@ -42,7 +43,9 @@ export class StripeService {
     return { productId: product.id, priceId: price.id };
   }
 
-  async createCheckoutSession(items: { name: string, description: string, unitAmount: number, currency: string, quantity: number }[]): Promise<Stripe.Checkout.Session> {
+  */
+
+  async createCheckoutSession(items: CreateCheckoutSessionDto['items']): Promise<Stripe.Checkout.Session> {
     const domainURL = this.configService.get<string>('DOMAIN');
 
     const lineItems = items.map(item => ({
@@ -66,6 +69,7 @@ export class StripeService {
     });
   }
 
+  /** 
   async createPrices(items: { productId: string, unitAmount: number, currency: string }[]): Promise<Stripe.Price[]> {
     const prices = [];
 
@@ -105,6 +109,7 @@ export class StripeService {
   async archivePrice(priceId: string): Promise<Stripe.Price> {
     return this.stripe.prices.update(priceId, { active: false });
   }
+  */
 
   constructEvent(payload: Buffer, sig: string, secret: string): Stripe.Event {
     return this.stripe.webhooks.constructEvent(payload, sig, secret);

@@ -13,6 +13,8 @@ import { AuthModule } from './auth/auth.module';
 import { VendorModule } from './vendor/vendor.module';
 import { UtilModule } from './utils/util.module';
 import { StripeModule } from './stripe/stripe.module';
+import { HttpModule } from '@nestjs/axios';
+import { CheckoutModule } from './checkout/checkout.module';
 
 @Module({
   imports: [
@@ -29,7 +31,9 @@ import { StripeModule } from './stripe/stripe.module';
     AuthModule,
     VendorModule,
     UtilModule,
+    HttpModule,
     StripeModule,
+    CheckoutModule,
   ],
   controllers: [AppController],
   providers: [AppService],

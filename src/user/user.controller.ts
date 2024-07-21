@@ -3,7 +3,7 @@ import { Controller, Get, Post, Param, Body, Patch, UseGuards  } from '@nestjs/c
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from '@user/models/user.model';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 import { Roles } from '@roles/roles.decorator';
 import { RolesGuard } from '../auth/guard/roles.guard';
 import { JwtAuthGuard } from '../auth/guard/jwt.guard';
@@ -25,8 +25,17 @@ export class UserController {
   @ApiOperation({ summary: 'Get user by username' })
   @ApiResponse({ status: 200, description: 'Returns the user with the specified username' })
   @ApiResponse({ status: 404, description: 'User not found' })
-  async findOne(@Param('username') username: string): Promise<User> {
-    return this.userService.findOne(username);
+  async findUserbyUsername(@Param('username') username: string): Promise<User> {
+    return this.userService.findUserbyUsername(username);
+  }
+
+  @Get(':id')
+  @ApiOperation({ summary: 'Find a user by ID' })
+  @ApiParam({ name: 'id', description: 'The ID of the user' })
+  @ApiResponse({ status: 200, description: 'User found', type: User })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  async findById(@Param('id') id: string): Promise<User> {
+    return this.userService.findById(id);
   }
 
   @Post()

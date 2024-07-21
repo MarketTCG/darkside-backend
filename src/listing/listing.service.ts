@@ -161,8 +161,11 @@ export class ListingsService {
     };
   }
 
-  async purchaseItem(purchaseItemDto: PurchaseItemDto) {
-    const { listingId, userId, amount, currency } = purchaseItemDto;
+  /*
+  DTO needs to be updated
+  */
+  async updateListingsUponPurchase(purchaseItemDto: PurchaseItemDto) {
+    const { listingId } = purchaseItemDto;
 
     // Find the listing in vendor inventory to get the quality and vendorId
     const vendorListing = await this.vendorModel.findOne(
@@ -176,7 +179,6 @@ export class ListingsService {
 
     const quality = vendorListing.Listings[0].Quality;
     const currentQuantity = vendorListing.Listings[0].Quantity;
-    const vendorId = vendorListing._id.toString(); // Ensure vendorId is a string
 
     if (currentQuantity <= 0) {
       throw new BadRequestException(`Listing with ID ${listingId} is out of stock`);
@@ -191,11 +193,6 @@ export class ListingsService {
     if (!productListing) {
       throw new NotFoundException(`Listing with ID ${listingId} not found in product listing`);
     }
-
-    const productId = productListing._id.toString(); // Ensure productId is a string
-
-    // Create a payment intent
-    const paymentIntent = await this.stripeService.createPaymentIntent(amount, currency);
 
     // Reduce quantity in vendor inventory
     const vendorUpdateResult = await this.vendorModel.updateOne(
@@ -217,20 +214,7 @@ export class ListingsService {
       throw new NotFoundException(`Listing with ID ${listingId} not found in product listing`);
     }
 
-    // Create an order
-    const order = new this.orderModel({
-      userId,
-      listingId,
-      productId,
-      vendorId,
-      quantity: 1,
-      status: 'Purchased',
-      purchaseDate: new Date(),
-      paymentIntentId: paymentIntent.id,
-    });
 
-    await order.save();
-
-    return { message: 'Item purchased and order created successfully', paymentIntent };
+    return { message: 'Products and Listings successfully updated' };
   }
 }

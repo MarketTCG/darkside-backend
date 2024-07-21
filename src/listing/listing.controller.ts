@@ -48,7 +48,7 @@ export class ListingController {
   @ApiOperation({ summary: 'Purchase an item and create an order' })
   @ApiBody({ type: PurchaseItemDto, description: 'Listing ID of the item to purchase, user ID, amount, and currency' })
   @ApiResponse({ status: 200, description: 'Item purchased and order created successfully' })
-  async purchaseItem(@Body() purchaseItemDto: PurchaseItemDto) {
-    return this.listingsService.purchaseItem(purchaseItemDto);
+  async updateListingsUponPurchase(@Body() purchaseItemDto: PurchaseItemDto) {
+    return this.listingsService.updateListingsUponPurchase(purchaseItemDto);
   }
 }
