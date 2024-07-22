@@ -12,5 +12,6 @@ import { VendorController } from './vendor.controller';
 ],
   controllers: [VendorController],
   providers: [VendorService],
+  exports: [VendorService]
 })
 export class VendorModule {}

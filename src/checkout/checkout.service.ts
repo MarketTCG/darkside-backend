@@ -6,13 +6,15 @@ import { CreateOrderDto } from 'src/order/dto/create-order.dto';
 import { OrderService } from '../order/order.service';
 import { StripeService } from '../stripe/stripe.service';
 import { UserService } from '@user/user.service';
+import { VendorService } from "../vendor/vendor.service"
 
 @Injectable()
 export class CheckoutService {
   constructor(
-    private readonly orderService: OrderService,
     private readonly stripeService: StripeService,
-    private readonly userService: UserService
+    private readonly userService: UserService,
+    private readonly orderService: OrderService,
+    private readonly vendorService: VendorService,
     
   ) {}
 
@@ -43,24 +45,28 @@ export class CheckoutService {
     if (!user) {
       throw new NotFoundException(`User with ID ${userId} not found`);
     }
+
+    const vendorId = createCheckoutSessionDto.items[0].vendorId;
+    const vendor = await this.vendorService.findById(userId);
+    if (!vendor) {
+      throw new NotFoundException(`User with ID ${vendorId} not found`);
+    }
     // Create an order
     const createOrderDto: CreateOrderDto = {
-      user: "user", // Replace with actual user retrieval logic
-      vendor: 'vendor_123', // Replace with actual vendor retrieval logic
-      productId: 'product_123', // Replace with actual product ID retrieval logic
-      items: createCheckoutSessionDto.items.map(item => ({
-        productId: item.vendorId, // Assuming vendorId is used as productId here
-        quantity: item.quantity,
-      })),
+      user: [user], // Replace with actual user retrieval logic
+      vendor: [vendor], // Replace with actual vendor retrieval logic
+      listingId: "",
+      productId: 'product_123',
+      quantity: 1,
       status: 'pending',
       purchaseDate: new Date(),
       stripePaymentId: '', // Replace with actual Stripe payment ID retrieval logic
     };
 
-    //const order = await this.orderService.create(createOrderDto);
+    const order = await this.orderService.create(createOrderDto);
 
     // Create a checkout session
     const session = await this.stripeService.createCheckoutSession(createCheckoutSessionDto.items);
-    return { /*order,*/ session };
+    return { order, session };
   }
 }

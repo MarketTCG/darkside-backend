@@ -8,7 +8,7 @@ class ProductItemDto {
   @IsString()
   vendorId: string;
 
-  @ApiProperty({ example: 'vendor_123', description: 'The vendor ID' })
+  @ApiProperty({ example: 'user ID', description: 'The user ID' })
   @IsString()
   userId: string;
 

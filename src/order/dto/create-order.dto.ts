@@ -1,7 +1,11 @@
-// src/orders/dto/create-order.dto.ts
+// src/order/dto/create-order.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsArray, IsDate, IsOptional } from 'class-validator';
+import { IsString, IsArray, IsDate, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
+import { UserSchema } from '../../user/schemas/user.schema';
+import { VendorSchema } from '../../vendor/schemas/vendor.schema';
+import { User } from '@user/models/user.model';
+import { Vendor } from 'src/vendor/models/vendor.model';
 
 class OrderItemDto {
   @ApiProperty({ example: 'product_123', description: 'The product ID' })
@@ -14,22 +18,29 @@ class OrderItemDto {
 }
 
 export class CreateOrderDto {
-  @ApiProperty({ example: 'user_123', description: 'The user ID' })
-  @IsString()
-  user: string;
+  @ApiProperty({ type: [User], description: 'List of users' })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => User)
+  user: User[];
 
-  @ApiProperty({ example: 'vendor_123', description: 'The vendor ID' })
+  @ApiProperty({ type: [Vendor], description: 'List of vendors' })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => Vendor)
+  vendor: Vendor[];
+
+  @ApiProperty({ example: 'listing_123', description: 'The listing ID' })
   @IsString()
-  vendor: string;
+  listingId: string;
 
   @ApiProperty({ example: 'product_123', description: 'The product ID' })
   @IsString()
   productId: string;
 
-  @ApiProperty({ type: [OrderItemDto], description: 'List of order items' })
-  @IsArray()
-  @Type(() => OrderItemDto)
-  items: OrderItemDto[];
+  @ApiProperty({ example: 2, description: 'The quantity of the product' })
+  @IsString()
+  quantity: number;
 
   @ApiProperty({ example: 'pending', description: 'The status of the order' })
   @IsString()
