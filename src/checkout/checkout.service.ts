@@ -7,6 +7,8 @@ import { OrderService } from '../order/order.service';
 import { StripeService } from '../stripe/stripe.service';
 import { UserService } from '@user/user.service';
 import { VendorService } from "../vendor/vendor.service"
+import { ListingsService } from 'src/listing/listing.service';
+import { OrderItemDto } from 'src/order/dto/order-item.dto';
 
 @Injectable()
 export class CheckoutService {
@@ -15,7 +17,7 @@ export class CheckoutService {
     private readonly userService: UserService,
     private readonly orderService: OrderService,
     private readonly vendorService: VendorService,
-    
+    private readonly listingService: ListingsService
   ) {}
 
 
@@ -46,10 +48,22 @@ export class CheckoutService {
       throw new NotFoundException(`User with ID ${userId} not found`);
     }
 
+    const items: OrderItemDto[] = await Promise.all(
+      createCheckoutSessionDto.items.map(async (item) => {
+        const listings = await this.listingService.findByListingId(item.listingId); // Assuming this method exists
+        const vendors = await this.vendorService.findById(listings.vendorListing.VendorID); // Assuming this method exists
+        return {
+          listings,
+          vendors,
+          quantity: item.quantity,
+        } 
+      })
+    );
+
     // Create an order
     const createOrderDto: CreateOrderDto = {
       user: [user], 
-      items: [],
+      items,
       status: 'pending',
       purchaseDate: new Date(),
       stripePaymentId: '', // Replace with actual Stripe payment ID retrieval logic

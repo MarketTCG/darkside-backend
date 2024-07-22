@@ -17,7 +17,7 @@ export class CreateOrderDto {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => OrderItemDto)
-  items: OrderItemDto[];
+  orderedItems: OrderItemDto[];
 
   @ApiProperty({ example: 'pending', description: 'The status of the order' })
   @IsString()
