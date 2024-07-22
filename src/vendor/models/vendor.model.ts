@@ -21,6 +21,8 @@ export class ListingItem {
 
 export class Vendor extends Document {
   UserID: string;
+  VendorName: string;
+  VendorEmail: string;
   Inventory: InventoryItem[];
   VendorRating: number;
   Listings: ListingItem[];

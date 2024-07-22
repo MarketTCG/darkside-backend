@@ -40,24 +40,16 @@ export class CheckoutService {
   }
 
   async createOrderAndCheckoutSession(createCheckoutSessionDto: CreateCheckoutSessionDto) {
-    const userId = createCheckoutSessionDto.items[0].userId;
+    const userId = createCheckoutSessionDto.userId;
     const user = await this.userService.findById(userId);
     if (!user) {
       throw new NotFoundException(`User with ID ${userId} not found`);
     }
 
-    const vendorId = createCheckoutSessionDto.items[0].vendorId;
-    const vendor = await this.vendorService.findById(userId);
-    if (!vendor) {
-      throw new NotFoundException(`User with ID ${vendorId} not found`);
-    }
     // Create an order
     const createOrderDto: CreateOrderDto = {
-      user: [user], // Replace with actual user retrieval logic
-      vendor: [vendor], // Replace with actual vendor retrieval logic
-      listingId: "",
-      productId: 'product_123',
-      quantity: 1,
+      user: [user], 
+      items: [],
       status: 'pending',
       purchaseDate: new Date(),
       stripePaymentId: '', // Replace with actual Stripe payment ID retrieval logic
@@ -66,7 +58,7 @@ export class CheckoutService {
     const order = await this.orderService.create(createOrderDto);
 
     // Create a checkout session
-    const session = await this.stripeService.createCheckoutSession(createCheckoutSessionDto.items);
-    return { order, session };
+    //const session = await this.stripeService.createCheckoutSession(createCheckoutSessionDto.items);
+    return { order/* session*/ };
   }
 }

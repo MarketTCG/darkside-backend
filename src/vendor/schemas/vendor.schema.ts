@@ -21,6 +21,8 @@ const ListingItemSchema = new Schema({
 
 export const VendorSchema = new Schema({
   UserID: { type: String, required: true, unique: true },
+  VendorName: { type: String, required: true},
+  VendorEmail: { type: String, required: true },
   Inventory: { type: [InventoryItemSchema], default: [], required: true },
   VendorRating: { type: Number, default: 0, required: true },
   Listings: { type: [ListingItemSchema], default: [], required: true },

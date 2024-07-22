@@ -34,9 +34,15 @@ class ProductItemDto {
 }
 
 export class CreateCheckoutSessionDto {
-  @ApiProperty({ type: [ProductItemDto], description: 'List of products with their details' })
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => ProductItemDto)
-  items: ProductItemDto[];
+  @ApiProperty({ example: '666709dbaeb7ab3dd13b9977', description: 'the id of the user in user db' })
+  @IsString()
+  userId: string;
+
+  @ApiProperty({ example: 'listing_123', description: 'The listing ID' })
+  @IsString()
+  listingId: string;
+
+  @ApiProperty({ example: 2, description: 'The quantity of the product' })
+  @IsNumber()
+  quantity: number;
 }
