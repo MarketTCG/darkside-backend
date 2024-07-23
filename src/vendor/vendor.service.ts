@@ -16,11 +16,15 @@ export class VendorService {
   constructor(@InjectModel('Vendor') private readonly vendorModel: Model<Vendor>,
   @InjectModel('Product') private readonly productModel: Model<Product>) {}
 
-  async createVendor(userId: string) {
+  async createVendor(userId: string): Promise<Vendor> {
+
+    // IMPLEMENT A FIND USER TO GET EMAIL, OR REQUIRE EMAIL AND NAME IN BODY
     const newVendor = new this.vendorModel({
       UserID: userId,
       Inventory: [],
       VendorRating: 0,
+      VendorName: "test name",
+      VendorEmail: "testvendoremail@gmail.com"
     });
     return newVendor.save();
   }
