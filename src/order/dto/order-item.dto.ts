@@ -12,10 +12,6 @@ class ListingItemDto {
     @IsString()
     name: string;
   
-    @ApiProperty({ example: 'Product Description', description: 'The description of the product' })
-    @IsString()
-    description: string;
-  
     @ApiProperty({ example: 1000, description: 'The price of the product in cents' })
     @IsNumber()
     price: number;
@@ -40,11 +36,12 @@ class ListingsDto {
     @ValidateNested()
     @Type(() => ListingItemDto)
     productListing: ListingItemDto;
-  
-    @ApiProperty({ type: ListingItemDto, description: 'The vendor listing' })
+
+    @ApiProperty({ type: VendorDto, description: 'The vendor listing' })
     @ValidateNested()
-    @Type(() => ListingItemDto)
-    vendorListing: ListingItemDto;
+    @Type(() => VendorDto)
+    vendorListing: VendorDto;
+
   }
   
   export class OrderItemDto {
@@ -52,13 +49,9 @@ class ListingsDto {
     @ValidateNested()
     @Type(() => ListingsDto)
     listings: ListingsDto;
-  
-    @ApiProperty({ type: VendorDto, description: 'The vendor' })
-    @ValidateNested()
-    @Type(() => VendorDto)
-    vendors: VendorDto;
-  
+
     @ApiProperty({ example: 2, description: 'The quantity of the product' })
     @IsNumber()
     quantity: number;
+  
   }

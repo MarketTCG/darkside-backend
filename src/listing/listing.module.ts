@@ -19,5 +19,6 @@ import OrderSchema from 'src/order/schemas/order.schema';
   ],
   controllers: [ListingController],
   providers: [ListingsService],
+  exports:[ListingsService]
 })
 export class ListingModule {}

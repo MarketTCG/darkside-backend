@@ -5,6 +5,7 @@ export class InventoryItem {
   _id: string;
   VendorID: string;
   ProductID: string;
+  Name: string;
   Price: number;
   Quantity: number;
   Quality: string;
@@ -13,6 +14,7 @@ export class InventoryItem {
 export class ListingItem {
   VendorID: string;
   ProductID: string;
+  Name: string;
   Price: number;
   Quantity: number;
   Quality: string;

@@ -16,7 +16,7 @@ export class CheckoutController {
     private readonly stripeService: StripeService
   ) {}
 
-  @Post()
+  @Post('process-order')
   @ApiOperation({ summary: 'Create a new checkout' })
   @ApiBody({ type: CreateCheckoutSessionDto })
   @ApiResponse({ status: 201, description: 'Checkout created successfully' })

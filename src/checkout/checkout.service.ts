@@ -51,28 +51,52 @@ export class CheckoutService {
     const items: OrderItemDto[] = await Promise.all(
       createCheckoutSessionDto.items.map(async (item) => {
         const listings = await this.listingService.findByListingId(item.listingId); // Assuming this method exists
-        const vendors = await this.vendorService.findById(listings.vendorListing.VendorID); // Assuming this method exists
+        console.log(listings, '---')
+        //console.log(listings.vendorListing.VendorID, '------')
+        const vendor = await this.vendorService.findById(listings.vendorListing.VendorID); 
+        console.log(vendor, '-----')
+        //console.log(vendorListing)
+        
+        const productListing = {
+          productId: listings.productListing._id,
+          name: listings.vendorListing.Name,
+          price: listings.productListing.Price
+        }
+        console.log(productListing)
+
+        const vendorListing = {
+          vendorId: vendor._id,
+          name: vendor.VendorName,
+          email: vendor.VendorEmail,
+        };
+
+        console.log(vendorListing)
+
         return {
-          listings,
-          vendors,
+          listings: {
+            productListing,
+            vendorListing,
+          },
           quantity: item.quantity,
-        } 
+        }; 
       })
     );
+
+    console.log(items)
 
     // Create an order
     const createOrderDto: CreateOrderDto = {
       user: [user], 
-      items,
+      orderedItems: items,
       status: 'pending',
       purchaseDate: new Date(),
-      stripePaymentId: '', // Replace with actual Stripe payment ID retrieval logic
+      stripePaymentId: 'test', // Replace with actual Stripe payment ID retrieval logic
     };
 
     const order = await this.orderService.create(createOrderDto);
 
     // Create a checkout session
     //const session = await this.stripeService.createCheckoutSession(createCheckoutSessionDto.items);
-    return { order/* session*/ };
+    return { order/*session*/ };
   }
 }

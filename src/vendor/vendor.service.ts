@@ -156,6 +156,7 @@ export class VendorService {
           listingsToAdd.push({
             VendorID: vendorId,
             ProductID: productId,
+            Name: card.Name,
             Price: card.Price,
             Quantity: card.Quantity,
             Quality: card.Quality,

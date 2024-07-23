@@ -4,6 +4,10 @@ import { IsArray, IsNumber, IsString, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 
 class CardDto {
+  @ApiProperty({ example: "CardName", description: 'The name of the card' })
+  @IsNumber()
+  Name: string;
+
   @ApiProperty({ example: 10, description: 'The quantity of the product' })
   @IsNumber()
   Quantity: number;

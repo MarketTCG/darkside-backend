@@ -5,6 +5,7 @@ import * as uniqueValidator from 'mongoose-unique-validator';
 const InventoryItemSchema = new Schema({
   VendorID: { type: String, required: true },
   ProductID: { type: String, required: true },
+  Name: { type: String, required: true},
   Price: { type: Number, required: true },
   Quantity: { type: Number, required: true },
   Quality: { type: String, required: true }
@@ -13,6 +14,7 @@ const InventoryItemSchema = new Schema({
 const ListingItemSchema = new Schema({
   VendorID: { type: String, required: true },
   ProductID: { type: String, required: true },
+  Name: { type: String, required: true},
   Price: { type: Number, required: true },
   Quantity: { type: Number, required: true },
   Quality: { type: String, required: true },

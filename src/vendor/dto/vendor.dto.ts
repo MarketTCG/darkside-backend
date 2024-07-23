@@ -27,6 +27,10 @@ class InventoryItemDto {
   @ApiProperty({ example: "NM", description: 'The quality of the product' })
   @IsNumber()
   Quality: string;
+
+  @ApiProperty({ example: "Card Name", description: 'The name of the card' })
+  @IsNumber()
+  Name: string;
 }
 
 export class VendorDto {
