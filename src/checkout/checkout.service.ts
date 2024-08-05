@@ -9,6 +9,9 @@ import { UserService } from '@user/user.service';
 import { VendorService } from "../vendor/vendor.service"
 import { ListingsService } from 'src/listing/listing.service';
 import { OrderItemDto } from 'src/order/dto/order-item.dto';
+import { StripeCheckoutDto } from '../stripe/dto/stripe-checkout.dto';
+import { LineItemDto } from 'src/stripe/dto/line-item.dto';
+import { ProductService } from 'src/product/product.service';
 
 @Injectable()
 export class CheckoutService {
@@ -17,7 +20,8 @@ export class CheckoutService {
     private readonly userService: UserService,
     private readonly orderService: OrderService,
     private readonly vendorService: VendorService,
-    private readonly listingService: ListingsService
+    private readonly listingService: ListingsService,
+    private readonly productService: ProductService
   ) {}
 
 
@@ -50,19 +54,21 @@ export class CheckoutService {
 
     const items: OrderItemDto[] = await Promise.all(
       createCheckoutSessionDto.items.map(async (item) => {
-        const listings = await this.listingService.findByListingId(item.listingId); // Assuming this method exists
-        console.log(listings, '---')
+        const listings = await this.listingService.findByListingId(item.listingId); 
+        const productName = await this.productService.findById(listings.vendorListing.ProductID)
+        //console.log(listings, '---')
         //console.log(listings.vendorListing.VendorID, '------')
         const vendor = await this.vendorService.findById(listings.vendorListing.VendorID); 
-        console.log(vendor, '-----')
+        //console.log(vendor, '-----')
         //console.log(vendorListing)
+        //console.log(productName)
         
         const productListing = {
           productId: listings.productListing._id,
-          name: listings.vendorListing.Name,
+          name: productName.Name,
           price: listings.productListing.Price
         }
-        console.log(productListing)
+        //console.log(productListing)
 
         const vendorListing = {
           vendorId: vendor._id,
@@ -70,7 +76,16 @@ export class CheckoutService {
           email: vendor.VendorEmail,
         };
 
-        console.log(vendorListing)
+        //console.log(vendorListing)
+        
+        const stripeItems: LineItemDto = {
+          name: productName.Name,
+          unitAmount: 1000,
+          productImageUrl: '', // Add image URL if available
+          quantity: item.quantity
+        }
+
+        console.log(stripeItems)
 
         return {
           listings: {
@@ -78,11 +93,11 @@ export class CheckoutService {
             vendorListing,
           },
           quantity: item.quantity,
+          lineItems: stripeItems
         }; 
       })
     );
 
-    console.log(items)
 
     // Create an order
     const createOrderDto: CreateOrderDto = {
@@ -94,9 +109,23 @@ export class CheckoutService {
     };
 
     const order = await this.orderService.create(createOrderDto);
+    
+    const lineItems: LineItemDto[] = items.map(item => ({
+      name: item.lineItems.name,
+      unitAmount: item.lineItems.unitAmount,
+      productImageUrl: 'test', // Add image URL if available
+      quantity: item.lineItems.quantity,
+    }));
 
-    // Create a checkout session
-    //const session = await this.stripeService.createCheckoutSession(createCheckoutSessionDto.items);
-    return { order/*session*/ };
+    const stripeCheckout: StripeCheckoutDto = {
+      lineItems,
+      currency: 'usd', // Assuming USD, adjust as needed
+      successUrl: 'https://example.com/success', // Replace with actual success URL
+      cancelUrl: 'https://example.com/cancel', // Replace with actual cancel URL
+    };
+
+    const session = await this.stripeService.createCheckoutSession(stripeCheckout);
+    return { order, session };
   }
+
 }

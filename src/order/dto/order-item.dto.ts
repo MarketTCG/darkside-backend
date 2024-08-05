@@ -1,7 +1,8 @@
 // src/order/dto/order-item.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNumber, ValidateNested } from 'class-validator';
+import { IsString, IsNumber, ValidateNested, IsArray } from 'class-validator';
 import { Type } from 'class-transformer';
+import { LineItemDto } from "../../stripe/dto/line-item.dto"
 
 class ListingItemDto {
     @ApiProperty({ example: 'product_123', description: 'The product ID' })
@@ -53,5 +54,8 @@ class ListingsDto {
     @ApiProperty({ example: 2, description: 'The quantity of the product' })
     @IsNumber()
     quantity: number;
-  
+    
+    @Type(() => LineItemDto)
+    lineItems: LineItemDto;
+
   }

@@ -2,7 +2,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Stripe from 'stripe';
-import { CreateCheckoutSessionDto } from './dto/create-checkout-session.dto';
+import { StripeCheckoutDto } from './dto/stripe-checkout.dto';
 
 @Injectable()
 export class StripeService {
@@ -45,28 +45,28 @@ export class StripeService {
 
   */
 
-  async createCheckoutSession(items: CreateCheckoutSessionDto['items']): Promise<Stripe.Checkout.Session> {
+  async createCheckoutSession(data: StripeCheckoutDto): Promise<Stripe.Checkout.Session> {
     const domainURL = this.configService.get<string>('DOMAIN');
 
-    const lineItems = items.map(item => ({
-      price_data: {
-        currency: item.currency,
-        unit_amount: item.unitAmount,
-        product_data: {
-          name: item.name,
-          description: item.description,
+    const session = await this.stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: data.lineItems.map(lineItem => ({
+        price_data: {
+          currency: data.currency,
+          product_data: {
+            name: lineItem.name,
+            images: [lineItem.productImageUrl],
+          },
+          unit_amount: lineItem.unitAmount,
         },
-      },
-      quantity: item.quantity,
-    }));
-
-    return this.stripe.checkout.sessions.create({
-      line_items: lineItems,
+        quantity: 1,
+      })),
       mode: 'payment',
-      success_url: `${domainURL}?success=true`,
-      cancel_url: `${domainURL}?canceled=true`,
-      expires_at: Math.floor(Date.now() / 1000) + (1800) //30min expiry
+      success_url: domainURL,
+      cancel_url: domainURL,
     });
+    return session;
+
   }
 
   /** 

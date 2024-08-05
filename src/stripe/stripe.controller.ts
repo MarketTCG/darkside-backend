@@ -4,7 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { StripeService } from './stripe.service';
 import { ApiBody, ApiResponse, ApiOperation, ApiParam, ApiTags, ApiQuery } from '@nestjs/swagger';
 import { GetCheckoutSessionDto } from './dto/get-checkout-session.dto';
-import { CreateCheckoutSessionDto } from './dto/create-checkout-session.dto';
+import { StripeCheckoutDto } from './dto/stripe-checkout.dto';
 import { CreatePriceDto } from './dto/create-price-items.dto';
 import { CreateProductDto } from './dto/create-products.dto';
 import { Response } from 'express';
@@ -37,10 +37,10 @@ export class StripeController {
 
   @Post('create-checkout-session')
   @ApiOperation({ summary: 'Create a Stripe checkout session with inline price data' })
-  @ApiBody({ type: CreateCheckoutSessionDto })
+  @ApiBody({ type: StripeCheckoutDto })
   @ApiResponse({ status: 201, description: 'Checkout session created successfully' })
-  async createCheckoutSession(@Body() createCheckoutSessionDto: CreateCheckoutSessionDto) {
-    const session = await this.stripeService.createCheckoutSession(createCheckoutSessionDto.items);
+  async createCheckoutSession(@Body() createCheckoutSessionDto: StripeCheckoutDto) {
+    const session = await this.stripeService.createCheckoutSession(createCheckoutSessionDto);
     return { session };
   }
 
