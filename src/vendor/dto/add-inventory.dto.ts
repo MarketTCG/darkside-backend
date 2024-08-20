@@ -1,6 +1,6 @@
 // src/vendor/dto/add-inventory.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNumber, IsArray, ValidateNested } from 'class-validator';
+import { IsString, IsNumber, IsArray, ValidateNested, IsBoolean } from 'class-validator';
 import { Type } from 'class-transformer';
 
 class InventoryItemDto {
@@ -27,6 +27,14 @@ class InventoryItemDto {
   @ApiProperty({ example: "NM", description: 'The quality of the product' })
   @IsString()
   Quality: string;
+
+  @ApiProperty({ example: "true", description: 'is the item listed' })
+  @IsBoolean()
+  IsListed: boolean;
+
+  @ApiProperty({ example: "id of the listing", description: 'The quality of the product' })
+  @IsNumber()
+  ListingId: string;
 }
 
 export class AddInventoryDto {

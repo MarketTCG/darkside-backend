@@ -1,6 +1,7 @@
 // src/vendor/models/vendor.model.ts
 import { Document } from 'mongoose';
 
+
 export class InventoryItem {
   _id: string;
   VendorID: string;
@@ -9,15 +10,7 @@ export class InventoryItem {
   Price: number;
   Quantity: number;
   Quality: string;
-}
-
-export class ListingItem {
-  VendorID: string;
-  ProductID: string;
-  Name: string;
-  Price: number;
-  Quantity: number;
-  Quality: string;
+  IsListed: boolean;
   ListingId: string;
 }
 
@@ -27,5 +20,4 @@ export class Vendor extends Document {
   VendorEmail: string;
   Inventory: InventoryItem[];
   VendorRating: number;
-  Listings: ListingItem[];
 }

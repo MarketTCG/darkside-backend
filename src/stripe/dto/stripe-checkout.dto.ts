@@ -16,13 +16,4 @@ export class StripeCheckoutDto {
   @IsNotEmpty()
   currency: string;
 
-  @ApiProperty({ example: 'https://example.com/success', description: 'URL to redirect to upon successful payment' })
-  @IsString()
-  @IsNotEmpty()
-  successUrl: string;
-
-  @ApiProperty({ example: 'https://example.com/cancel', description: 'URL to redirect to upon canceled payment' })
-  @IsString()
-  @IsNotEmpty()
-  cancelUrl: string;
 }

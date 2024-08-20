@@ -80,7 +80,7 @@ export class CheckoutService {
         
         const stripeItems: LineItemDto = {
           name: productName.Name,
-          unitAmount: 1000,
+          unitAmount: productListing.price,
           productImageUrl: '', // Add image URL if available
           quantity: item.quantity
         }
@@ -98,18 +98,6 @@ export class CheckoutService {
       })
     );
 
-
-    // Create an order
-    const createOrderDto: CreateOrderDto = {
-      user: [user], 
-      orderedItems: items,
-      status: 'pending',
-      purchaseDate: new Date(),
-      stripePaymentId: 'test', // Replace with actual Stripe payment ID retrieval logic
-    };
-
-    const order = await this.orderService.create(createOrderDto);
-    
     const lineItems: LineItemDto[] = items.map(item => ({
       name: item.lineItems.name,
       unitAmount: item.lineItems.unitAmount,
@@ -119,12 +107,22 @@ export class CheckoutService {
 
     const stripeCheckout: StripeCheckoutDto = {
       lineItems,
-      currency: 'usd', // Assuming USD, adjust as needed
-      successUrl: 'https://example.com/success', // Replace with actual success URL
-      cancelUrl: 'https://example.com/cancel', // Replace with actual cancel URL
+      currency: 'aud', // Assuming USD, adjust as needed
     };
 
     const session = await this.stripeService.createCheckoutSession(stripeCheckout);
+
+    // Create an order
+    const createOrderDto: CreateOrderDto = {
+      user: [user], 
+      orderedItems: items,
+      status: 'pending',
+      purchaseDate: new Date(),
+      stripePaymentId: session.id, // Replace with actual Stripe payment ID retrieval logic
+    };
+
+    const order = await this.orderService.create(createOrderDto);
+    
     return { order, session };
   }
 
