@@ -33,7 +33,7 @@ export class ListingsService {
       throw new NotFoundException(`Listing with ID ${_id} not found in vendor inventory`);
     }
 
-    const quality = vendorListing.Listings[0].Quality;
+    const quality = vendorListing.Inventory[0].Quality;
 
     // Update quantity in vendor inventory
     const vendorUpdateResult = await this.vendorModel.updateOne(
@@ -71,7 +71,7 @@ export class ListingsService {
       throw new NotFoundException(`Listing with ID ${_id} not found in vendor inventory`);
     }
 
-    const quality = vendorListing.Listings[0].Quality;
+    const quality = vendorListing.Inventory[0].Quality;
 
     // Update price in vendor inventory
     const vendorUpdateResult = await this.vendorModel.updateOne(
@@ -107,7 +107,7 @@ export class ListingsService {
       throw new NotFoundException(`Listing with ID ${listingId} not found in vendor inventory`);
     }
 
-    const quality = vendorListing.Listings[0].Quality;
+    const quality = vendorListing.Inventory[0].Quality;
 
     // Delete listing from vendor inventory
     const vendorUpdateResult = await this.vendorModel.updateOne(
@@ -143,7 +143,7 @@ export class ListingsService {
       throw new NotFoundException(`Listing with ID ${listingId} not found in vendor inventory`);
     }
 
-    const quality = vendorListing.Listings[0].Quality;
+    const quality = vendorListing.Inventory[0].Quality;
 
     // Find listing in product listing
     const productListing = await this.productModel.findOne(
@@ -156,7 +156,7 @@ export class ListingsService {
     }
 
     return {
-      vendorListing: vendorListing.Listings[0],
+      vendorListing: vendorListing.Inventory[0],
       productListing: productListing.Listing[quality][0],
     };
   }
@@ -177,8 +177,8 @@ export class ListingsService {
       throw new NotFoundException(`Listing with ID ${listingId} not found in vendor inventory`);
     }
 
-    const quality = vendorListing.Listings[0].Quality;
-    const currentQuantity = vendorListing.Listings[0].Quantity;
+    const quality = vendorListing.Inventory[0].Quality;
+    const currentQuantity = vendorListing.Inventory[0].Quantity;
 
     if (currentQuantity <= 0) {
       throw new BadRequestException(`Listing with ID ${listingId} is out of stock`);

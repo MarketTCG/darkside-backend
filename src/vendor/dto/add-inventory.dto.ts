@@ -28,11 +28,11 @@ class InventoryItemDto {
   @IsString()
   Quality: string;
 
-  @ApiProperty({ example: "true", description: 'is the item listed' })
+  @ApiProperty({ example: "false", description: 'is the item listed' })
   @IsBoolean()
   IsListed: boolean;
 
-  @ApiProperty({ example: "id of the listing", description: 'The quality of the product' })
+  @ApiProperty({ example: "", description: 'The quality of the product' })
   @IsNumber()
   ListingId: string;
 }

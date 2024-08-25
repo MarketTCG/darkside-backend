@@ -140,7 +140,7 @@ export class VendorService {
 
         // Group cards by quality for product update
         const groupedCards: { [key: string]: { VendorId: string; Quantity: number; Price: number; ListingId: string }[] } = {};
-        const listingsToAdd = [];
+        const modifyInventory = [];
 
         cards.forEach(card => {
           const listingId = uuidv4(); // Generate a unique identifier for each card entry
@@ -157,13 +157,8 @@ export class VendorService {
             ListingId: listingId,
           });
 
-          listingsToAdd.push({
-            VendorID: vendorId,
-            ProductID: productId,
-            Name: card.Name,
-            Price: card.Price,
-            Quantity: card.Quantity,
-            Quality: card.Quality,
+          modifyInventory.push({
+            IsListed: true,
             ListingId: listingId,
           });
         });
@@ -184,7 +179,7 @@ export class VendorService {
         // Update the vendor document
         await this.vendorModel.updateOne(
           { _id: vendorId },
-          { $push: { Listings: { $each: listingsToAdd } } }
+          { $set: { Listings: { $each: modifyInventory } } }
         ).exec();
       }
 

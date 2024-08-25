@@ -11,7 +11,7 @@ const InventoryItemSchema = new Schema({
   Quantity: { type: Number, required: true },
   Quality: { type: String, required: true },
   IsListed: { type: Boolean, required: true }, //Added
-  ListingId: { type: String, required: true }
+  ListingId: { type: String, required: false }
 });
 
 export const VendorSchema = new Schema({

@@ -10,7 +10,7 @@ class InventoryItemDto {
   @ApiProperty({ example: '666fccac8a495eba3b996d8f', description: 'The ID of the inventory item' })
   @IsString()
   _id: string;
-  
+
   @ApiProperty({ example: '665d2c498805000ce934043d', description: 'The ID of the inventory item' })
   @IsString()
   VendorID: string;
@@ -35,11 +35,11 @@ class InventoryItemDto {
   @IsNumber()
   Quality: string;
 
-  @ApiProperty({ example: "true", description: 'is the item listed' })
+  @ApiProperty({ example: "false", description: 'is the item listed' })
   @IsBoolean()
   IsListed: boolean;
 
-  @ApiProperty({ example: "id of the listing", description: 'The quality of the product' })
+  @ApiProperty({ example: "", description: 'The quality of the product' })
   @IsNumber()
   ListingId: string;
   
