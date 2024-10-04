@@ -117,7 +117,8 @@ export class VendorController {
     return this.vendorService.updateInventoryItemQuantity(vendorId, { ...updateQuantityDto, _id: itemId });
   }
 
-  @Put(':vendorId/add-cards')
+  //PARAM DTO currently links to product/add-cards.dto instead of vendor/add-cards.dto
+  @Put(':vendorId/create-listings')
   @ApiOperation({ summary: 'Add cards to products and vendor listings' })
   @ApiParam({ name: 'vendorId', required: true, description: 'The ID of the vendor' })
   @ApiBody({ type: AddCardsDto, description: 'Product IDs with their respective cards to add' })

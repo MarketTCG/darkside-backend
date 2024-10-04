@@ -129,6 +129,31 @@ export class VendorService {
   }
 
   async addCardsToProductsAndVendorListings(vendorId: string, addCardsDto: AddCardsDto) {
+
+    try 
+    { 
+      const vendor = await this.vendorModel.findById(vendorId);
+
+      if (!vendor) {
+        throw new Error('Vendor not found'); }
+      }
+        
+    catch ( error ) {
+      console.error('Vendor not found in vendor database using _id', error);
+      throw new Error('Failed to find vendor');
+    }
+
+    try { 
+      const product = await this.productModel.findById(vendorId);
+
+      if (!product) {
+        throw new Error('Product not found'); }
+      } 
+      catch ( error ) {
+        console.error('Product was unable to be found in product database using _id', error);
+        throw new Error('Failed to find product');
+    }
+
     const { products } = addCardsDto;
 
     console.log('Updating products and vendor listings with IDs and their respective cards:', products);

@@ -20,4 +20,5 @@ export class Vendor extends Document {
   VendorEmail: string;
   Inventory: InventoryItem[];
   VendorRating: number;
+  PostagePrice: number;
 }

@@ -37,6 +37,7 @@ class ProductCardsDto {
   cards: CardDto[];
 }
 
+
 export class AddCardsDto {
   @ApiProperty({ type: [ProductCardsDto], description: 'Array of product IDs with their respective cards' })
   @IsArray()

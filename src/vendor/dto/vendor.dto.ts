@@ -67,4 +67,8 @@ export class VendorDto {
   @ApiProperty({ example: 5, description: 'The rating of the vendor' })
   @IsNumber()
   VendorRating: number;
+
+  @ApiProperty({ example: 5, description: 'Postage amount' })
+  @IsNumber()
+  PostagePrice: number;
 }

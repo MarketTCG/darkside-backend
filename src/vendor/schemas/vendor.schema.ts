@@ -20,6 +20,7 @@ export const VendorSchema = new Schema({
   VendorEmail: { type: String, required: true },
   Inventory: { type: [InventoryItemSchema], default: [], required: true }, 
   VendorRating: { type: Number, default: 0, required: true },
+  PostagePrice: { type: Number, default: 0, required: true },
 }, { collection: 'vendors', versionKey: false }); 
 
 VendorSchema.plugin(uniqueValidator, { message: 'Error, expected {PATH} to be unique.' });
