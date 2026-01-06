@@ -1,35 +1,48 @@
+# Darkside Backend
+
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
+  A modern, scalable e-commerce backend built with <a href="https://nestjs.com/" target="_blank">NestJS</a> and <a href="https://www.mongodb.com/" target="_blank">MongoDB</a>.
 </p>
-
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Darkside is a full-featured e-commerce and marketplace platform backend. It provides comprehensive APIs for managing products, catalogues, orders, user authentication with OAuth support, vendor management, and integrated payment processing via Stripe.
+
+### Key Features
+
+- **Authentication & Authorization**: JWT-based authentication with Google OAuth2 support
+- **Product Management**: Full product catalogue with listings and pricing
+- **Order Management**: Complete order lifecycle tracking
+- **Payment Processing**: Stripe integration for secure checkout and payments
+- **Vendor Management**: Multi-vendor support with dedicated vendor APIs
+- **User Management**: User profiles, roles, and permissions
+- **API Documentation**: Swagger/OpenAPI documentation
+- **Scalable Architecture**: Modular NestJS structure with MongoDB persistence
+
+## Prerequisites
+
+- Node.js (v16 or higher)
+- MongoDB instance
+- npm or yarn package manager
+- Stripe API keys (for payment processing)
+- Google OAuth credentials (for authentication)
 
 ## Installation
 
 ```bash
 $ npm install
+```
+
+## Environment Setup
+
+Create a `.env` file in the project root with the following variables:
+
+```env
+DATABASE_URL=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+STRIPE_API_KEY=your_stripe_secret_key
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
 ```
 
 ## Running the app
@@ -41,15 +54,21 @@ $ npm run start
 # watch mode
 $ npm run start:dev
 
+# debug mode
+$ npm run start:debug
+
 # production mode
 $ npm run start:prod
 ```
 
-## Test
+## Testing
 
 ```bash
 # unit tests
 $ npm run test
+
+# watch mode
+$ npm run test:watch
 
 # e2e tests
 $ npm run test:e2e
@@ -58,16 +77,37 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-## Support
+## Code Quality
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+# format code
+$ npm run format
 
-## Stay in touch
+# lint code
+$ npm run lint
+```
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## Project Structure
+
+- **auth/**: Authentication and authorization (JWT, Google OAuth)
+- **catalogue/**: Product catalogues and categories
+- **listing/**: Product listings with pricing and inventory
+- **product/**: Product management and details
+- **order/**: Order processing and tracking
+- **checkout/**: Checkout session management
+- **stripe/**: Payment processing integration
+- **user/**: User profiles and management
+- **vendor/**: Vendor management and operations
+- **utils/**: Utility services and helpers
+
+## API Documentation
+
+Once the application is running, access the API documentation at:
+
+```
+http://localhost:3000/api
+```
 
 ## License
 
-Nest is [MIT licensed](LICENSE).
+UNLICENSED
